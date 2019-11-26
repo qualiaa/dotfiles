@@ -1,0 +1,158 @@
+set $mod Mod4
+set $audio_player clementine
+floating_modifier $mod
+
+mouse_warping none
+#focus_follows_mouse no
+
+
+# font
+# good for high dpi
+font pango:Noto Mono 8
+# good for low dpi
+#font pango:lime 8
+#font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
+
+# style
+new_window 1pixel
+#client.focused          #4c7899 #5599ff #ffffff #2e9ef4
+client.focused          #5599ff #5599ff #ffffff #2e9ef4
+client.unfocused        #222222 #222222 #888888 #292d2e   #222222
+client.urgent           #CC0000 #CC0000 #ffffff #900000   #900000
+
+# startup programs
+#exec steam
+#exec skype
+
+# program settings
+for_window [class="qutebrowser"] border pixel 2
+for_window [class="Steam"] floating enable, move container to workspace 8
+for_window [class="Processing"] floating enable
+for_window [class="UE4Editor"] floating enable
+assign [class="discord"] 9
+assign [class="Clementine"] 10
+for_window [class="Firefox" title="JupyterLab"] floating disable
+
+#for_window [class="Ardour"] move container to workspace 1
+for_window [class="patchage"] move container to workspace 2
+for_window [class="zynaddsubfx"] floating enable, move container to workspace 3
+for_window [class="org-jsampler-JSampler"] floating enable, move container to workspace 4
+for_window [class="Seq64"] floating enable, border none
+#for_window [title="Helm"] floating enable, border none
+for_window [title="amsynth"] floating enable, border none
+
+assign [class="Skype"] 5
+
+# focus urgent
+bindsym $mod+u [urgent="latest"] focus
+
+# start a terminal
+bindsym $mod+Return exec i3-sensible-terminal
+
+# kill focused window
+bindsym $mod+Shift+q kill
+
+# start dmenu
+bindsym $mod+d exec dmenu_run
+
+# lock i3
+bindsym Control+$mod+l exec i3lock -t -f -i ~/.lockscreen/computer-misuse.png
+
+
+# WIP: wrapper for import screenshots
+# bindsym Print exec /home/jamie/bin/screenshot -window root
+
+# brightness
+bindsym XF86MonBrightnessDown exec /home/jamie/usr/bin/brightness -b -t 0.2 -5
+bindsym XF86MonBrightnessUp   exec /home/jamie/usr/bin/brightness -b -t 0.2 +5
+
+# audio
+bindsym XF86AudioMute exec pulseaudio-ctl mute
+bindsym XF86AudioMicMute exec pulseaudio-ctl mute-input
+bindsym XF86AudioLowerVolume exec pulseaudio-ctl down
+bindsym XF86AudioRaiseVolume exec pulseaudio-ctl up
+bindsym $mod+n exec pavucontrol
+bindsym $mod+m exec $audio_player
+
+# window controls
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+bindsym $mod+a focus parent
+#bindsym $mod+d focus child
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+bindsym $mod+g split v
+bindsym $mod+v split h
+bindsym $mod+f fullscreen toggle
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+# toggle tiling / floating
+bindsym $mod+Shift+space floating toggle
+
+# change focus between tiling / floating windows
+bindsym $mod+space focus mode_toggle
+
+# workspaces
+bindsym $mod+1 workspace 1
+bindsym $mod+2 workspace 2
+bindsym $mod+3 workspace 3
+bindsym $mod+4 workspace 4
+bindsym $mod+5 workspace 5
+bindsym $mod+6 workspace 6
+bindsym $mod+7 workspace 7
+bindsym $mod+8 workspace 8
+bindsym $mod+9 workspace 9
+bindsym $mod+0 workspace 10
+bindsym $mod+Shift+1 move container to workspace 1
+bindsym $mod+Shift+2 move container to workspace 2
+bindsym $mod+Shift+3 move container to workspace 3
+bindsym $mod+Shift+4 move container to workspace 4
+bindsym $mod+Shift+5 move container to workspace 5
+bindsym $mod+Shift+6 move container to workspace 6
+bindsym $mod+Shift+7 move container to workspace 7
+bindsym $mod+Shift+8 move container to workspace 8
+bindsym $mod+Shift+9 move container to workspace 9
+bindsym $mod+Shift+0 move container to workspace 10
+
+# reload the configuration file
+bindsym $mod+Shift+c reload
+bindsym $mod+Shift+r restart
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+
+# resize window (you can also use the mouse for that)
+mode "resize" {
+        # These bindings trigger as soon as you enter the resize mode
+        bindsym h resize shrink width 10 px or 10 ppt
+        bindsym j resize grow height 10 px or 10 ppt
+        bindsym k resize shrink height 10 px or 10 ppt
+        bindsym l resize grow width 10 px or 10 ppt
+
+        bindsym Shift+h resize shrink width 2 px or 2 ppt
+        bindsym Shift+j resize grow height 2 px or 2 ppt
+        bindsym Shift+k resize shrink height 2 px or 2 ppt
+        bindsym Shift+l resize grow width 2 px or 2 ppt
+
+        # same bindings, but for the arrow keys
+        bindsym Left resize shrink width 10 px or 10 ppt
+        bindsym Down resize grow height 10 px or 10 ppt
+        bindsym Up resize shrink height 10 px or 10 ppt
+        bindsym Right resize grow width 10 px or 10 ppt
+
+        # back to normal: Enter or Escape
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+
+bindsym $mod+r mode "resize"
+
+# Start i3bar
+bar {
+        status_command i3status
+        #tray_output primary
+}

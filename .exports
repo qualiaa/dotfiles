@@ -1,0 +1,24 @@
+# Local usr/, .local/
+PATH=$HOME/usr/bin:$PATH
+PATH=$HOME/.local/bin:$PATH
+# Java
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk
+PATH=$JAVA_HOME/bin:$PATH
+
+# Espressif ESP32 toolchain
+PATH=$HOME/usr/opt/xtensa-esp32-elf/bin:$PATH
+
+# Espressif ESP32 devkit
+export IDF_PATH=$HOME/usr/opt/esp-idf
+PATH=$IDF_PATH/tools:$PATH
+
+export EDITOR=vim
+export BROWSER=xdg-open
+export CC=gcc
+export CXX=g++
+export ANDROID_HOME=/opt/android-sdk
+
+export PLAYERGLOBALHOME=/opt/apache-flex-sdk/player
+export LC_COLLATE=C
+
+export PATH

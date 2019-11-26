@@ -1,0 +1,10 @@
+[ -f ~/.exports ] && source ~/.exports
+[ -f ~/.Xresources ] && xrdb -merge ~/.Xresources &
+[ -d ~/.wallpapers ] && feh --bg-fill --randomize ~/.wallpapers/* &
+
+numlockx &
+udiskie & # -NT &
+#pulseaudio --start &
+# simon &
+xcompmgr &
+redshift -l51:-1 -t 6500:3000 &

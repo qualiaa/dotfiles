@@ -1,0 +1,1 @@
+/home/jamie/projects/programming/utils/redshift-hooks/hooks/brightness.sh

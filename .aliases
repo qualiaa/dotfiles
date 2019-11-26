@@ -1,0 +1,25 @@
+alias matlab='matlab -nodesktop -nosplash'
+alias cv='ipython --profile=cv'
+alias pylab='ipython --pylab'
+#alias open='xdg-open'
+alias zz='source $ZSHRC'
+alias zshrc='vim $ZSHRC; zz'
+alias rts='sed -i "s/ *$//"'
+alias setbg='feh --bg-fill --randomize ~/.wallpapers'
+alias lime='haxelib run lime'
+alias flixel='haxelib run flixel-tools'
+
+alias jack='jack_control'
+
+alias update='yaourt -Syua'
+alias install='yaourt -S'
+
+alias ghc='stack ghc --'
+alias ghci='stack ghci'
+alias runghc='stack runghc'
+alias runhaskell='stack runhaskell'
+alias ghcid='ghcid --command="stack ghci"'
+
+alias bluez="bluetoothctl"
+
+alias idf='idf.py'

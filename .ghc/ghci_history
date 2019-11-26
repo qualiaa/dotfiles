@@ -1,0 +1,100 @@
+let z = map f y
+let f x = x + 1
+y !! 1
+let y = [x | let x = sum [1..], _ <- [0..10]]
+let y = [x | let x = [1..], _ <- [0..10]]
+y
+let y = [x | let x = [1..], _ <- [0..10]]
+ley y = [x | let x = [1..], _ <- [0..10]]
+[x | let x = [1..3], _ <- [0..10]]
+[x | let x = [1..], _ <- [0..10]]
+[x | x = [1..], _ <- [0..10]]
+[x | x <- [1..], _ <- [0..10] ]
+take 2 [1]
+import GHC
+import GHCI
+:version
+:v
+:m +Module
+:l Module
+:l Module.o
+:l Module.hi
+:l Module.hs
+:l Module
+:l Module.o
+:l Module.hi
+:l Module
+:m +Module
+:load! Module
+:load! module
+:load! module.o
+:load! module.hi
+:m +Module
+:m +module
+:l module
+:l module.hi
+:l module.hs
+:r
+:r
+:r
+:r
+:r
+:r
+:r
+:r
+:r
+:r
+:r
+:r
+:r
+:r
+:r
+:r
+:r
+:r
+:r
+:r
+:r
+:r
+:r
+:r
+:r
+:r
+:r
+:r
+:r
+:r
+:r
+:r
+T.pack $ L8.unpack $ L.pack [0x7B]
+T.pack $ L8.unpack $ L.pack [0xAF]
+T.pack $ L8.unpack $ L.pack [0xAE]
+T.pack $ L8.unpack $ L.pack [0xAD]
+T.pack $ L8.unpack $ L.pack [0xAD]
+T.pack $ L8.unpack $ L.pack [0xAD]
+import qualified Data.ByteString.Lazy.Char8 as L8
+import Data.ByteString.Char8.Lazy as L8
+T.pack $ L.unpack $ L.pack [0xAD]
+import Data.Text as T
+L.pack [0xAD] 
+import Data.ByteString.Lazy as L
+fromIntegral 8 :: Word8
+import Data.Word.Word8
+Word8 1
+Data.Word.Word8 7
+import Data.Word
+localeEncoding
+import System.IO
+:t scanl'
+:t scanl;
+:m +Data.List
+:}
+myLookup' k [_:al] = MyLookup' k al
+myLookup' k [(k,v):_] = Just v
+myLookup' _ [] = Nothing
+myLookup' :: (Eq a) => a -> [(a,b)] -> Maybe b
+:{
+:}
+}:
+myLookup' k [_:al] = MyLookup' k al
+myLookup' k [(k,v):_] = Just v
