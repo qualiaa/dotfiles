@@ -1,3 +1,9 @@
 [submodule ".config/emacs"]
 	path = dot/.config/emacs
 	url = https://github.com/syl20bnr/spacemacs
+[submodule "dot/.urxvt/urxvt-new-window"]
+	path = dot/.urxvt/urxvt-new-window
+	url = https://github.com/qualiaa/urxvt-new-window
+[submodule "dot/.urxvt/urxvt-config-reload"]
+	path = dot/.urxvt/urxvt-config-reload
+	url = https://github.com/qualiaa/urxvt-config-reload
