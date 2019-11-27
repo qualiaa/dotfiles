@@ -1,25 +1,37 @@
-alias matlab='matlab -nodesktop -nosplash'
-alias cv='ipython --profile=cv'
-alias pylab='ipython --pylab'
-#alias open='xdg-open'
+alias open='xdg-open'
 alias zz='source $ZSHRC'
 alias zshrc='vim $ZSHRC; zz'
 alias rts='sed -i "s/ *$//"'
-alias setbg='feh --bg-fill --randomize ~/.wallpapers'
-alias lime='haxelib run lime'
-alias flixel='haxelib run flixel-tools'
+alias setbg='feh --bg-fill'
+alias bell='echo -ne "\a"'
 
-alias jack='jack_control'
+command -v jack_control >/dev/null && alias jack='jack_control'
+command -v bluetoothctl >/dev/null && alias bluez="bluetoothctl"
+#alias lime='haxelib run lime'
+#alias flixel='haxelib run flixel-tools'
+#alias idf='idf.py'
 
-alias update='yaourt -Syua'
-alias install='yaourt -S'
+if command -v stack >/dev/null; then
+    alias ghc='stack ghc --'
+    alias ghci='stack ghci'
+    alias runghc='stack runghc'
+    alias runhaskell='stack runhaskell'
+    alias ghcid='ghcid --command="stack ghci"'
+fi
 
-alias ghc='stack ghc --'
-alias ghci='stack ghci'
-alias runghc='stack runghc'
-alias runhaskell='stack runhaskell'
-alias ghcid='ghcid --command="stack ghci"'
-
-alias bluez="bluetoothctl"
-
-alias idf='idf.py'
+if [ -f /etc/debian_version ]; then
+    alias pupdate='sudo apt update; sudo apt upgrade'
+    alias pinstall='sudo apt install'
+    alias psearch='apt search'
+    alias puninstall='sudo apt remove'
+elif command -v yay >/dev/null; then
+    alias pupdate='yay -Syu'
+    alias pinstall='yay -S'
+    alias psearch='yay -Ss'
+    alias puninstall='yay -Rs'
+else
+    alias pupdate='sudo pacman -Syu'
+    alias pinstall='sudo pacman -S'
+    alias psearch='sudo pacman -Ss'
+    alias puninstall='sudo pacman -Rs'
+fi
