@@ -5,3 +5,5 @@
 redshift -l51:-1 -t 6500:3000 &
 numlockx &
 
+# Work specific settings
+setxkbmap -option "caps:escape" &

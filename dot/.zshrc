@@ -963,3 +963,7 @@ else
 fi
 unset __conda_setup
 # <<< conda initialize <<<
+
+### Work specific settings
+# ROS
+source /opt/ros/melodic/setup.zsh
