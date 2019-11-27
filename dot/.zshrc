@@ -926,29 +926,32 @@
 #
 #
 #
-# Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 
 ZSH_THEME="robbyrussell"
 
-# DISABLE_AUTO_TITLE="true"
-# COMPLETION_WAITING_DOTS="true"
-
-plugins=(git ssh-agent zsh-syntax-highlighting)
+plugins=(git
+         ssh-agent
+         zsh-syntax-highlighting
+         zsh-autosuggestions
+         zsh-completions)
 
 # User configuration
 source $HOME/.aliases
 source $ZSH/oh-my-zsh.sh
 
+export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=6'
+
 if [ -n "$SSH_CLIENT" ]; then
     export PROMPT="%B%m%b $PROMPT"
 fi
 
-eval `dircolors ~/.dircolors`
+[ -f ~/.dircolors ] && eval `dircolors ~/.dircolors`
+
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/jamie/.miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+__conda_setup="$(~/.miniconda3/bin/conda 'shell.zsh' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
