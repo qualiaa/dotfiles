@@ -1,1 +1,1 @@
-[ -f ~/.exports ] && source ~/.exports
+[ -f ~/.zprofile ] && source ~/.zprofile
