@@ -375,7 +375,6 @@ It should only modify the values of Spacemacs settings."
                                                    org-mode
                                                    pdf-view-mode
                                                    text-mode)
-                                        
 
    ;; Code folding method. Possible values are `evil' and `origami'.
    ;; (default 'evil)
@@ -483,13 +482,19 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
-  (setq clang-format-style-option "{BasedOnStyle: Google, IndentWidth: 4}")
-  (setq evil-shift-width 4)
   (setq-default
+   ;; EVIL settings
+   evil-shift-width 4
+
+   ;; C++ settings
+   clang-format-style-option "{BasedOnStyle: Google, IndentWidth: 4}"
+
+   ;; Python settings
    pytest-project-root-files '("setup.py" ".projectile" ".git" ".hg" ".exercism")
    pytest-global-name "python -m pytest"
-   )
   )
+  (setenv "WORKON_HOME" "/home/jamie/.miniconda3/envs")
+)
 
 (defun dotspacemacs/emacs-custom-settings ()
   "Emacs custom settings.
