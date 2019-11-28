@@ -3,8 +3,9 @@ set $audio_player clementine
 
 floating_modifier $mod
 
-mouse_warping none
-#focus_follows_mouse no
+### set xrandr
+exec xrandr --output eDP-1-1 --primary
+exec xrandr --output HDMI-1-1 --right-of eDP-1-1
 
 ### Appearance
 # Gaps
@@ -12,13 +13,13 @@ gaps inner 20
 
 # Font
 # (good for high dpi)
-font pango:Noto Mono 8
+#font pango:Noto Mono 8
 # (good for low dpi)
-#font pango:lime 8
+font pango:lime 8
 #font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
 
 # Borders
-default_border pixel 1
+default_border pixel 0
 client.focused          #5599ff #5599ff #ffffff #2e9ef4
 client.unfocused        #222222 #222222 #888888 #292d2e   #222222
 client.urgent           #CC0000 #CC0000 #ffffff #900000   #900000
@@ -71,8 +72,8 @@ bindsym $mod+Shift+q kill
 bindsym $mod+d exec dmenu_run
 
 # lock i3
-bindsym Control+$mod+l exec i3lock -t -f -i ~/.lockscreen/computer-misuse.png
-#bindsym Control+$mod+l exec i3lock --show-failed-attempts -i ~/.wallpaper.png
+#bindsym Control+$mod+l exec i3lock -t -f -i ~/.lockscreen/computer-misuse.png
+bindsym Control+$mod+l exec i3lock --show-failed-attempts -i ~/.wallpaper.png
 
 
 # WIP: wrapper for import screenshots
