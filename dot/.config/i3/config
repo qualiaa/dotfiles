@@ -1,38 +1,42 @@
 set $mod Mod4
 set $audio_player clementine
+
 floating_modifier $mod
 
 mouse_warping none
 #focus_follows_mouse no
 
+### Appearance
+# Gaps
+gaps inner 20
 
-# font
-# good for high dpi
+# Font
+# (good for high dpi)
 font pango:Noto Mono 8
-# good for low dpi
+# (good for low dpi)
 #font pango:lime 8
 #font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
 
-# style
-new_window 1pixel
-#client.focused          #4c7899 #5599ff #ffffff #2e9ef4
+# Borders
+default_border pixel 1
 client.focused          #5599ff #5599ff #ffffff #2e9ef4
 client.unfocused        #222222 #222222 #888888 #292d2e   #222222
 client.urgent           #CC0000 #CC0000 #ffffff #900000   #900000
 
-# startup programs
-#exec steam
-#exec skype
+### Program Settings
 
 # program settings
-for_window [class="qutebrowser"] border pixel 2
-for_window [class="Steam"] floating enable, move container to workspace 8
-for_window [class="Processing"] floating enable
-for_window [class="UE4Editor"] floating enable
+assign [class="Firefox"] www
+assign [class="Skype"] 5
+assign [class="Steam"] 8
 assign [class="discord"] 9
 assign [class="Clementine"] 10
-for_window [class="Firefox" title="JupyterLab"] floating disable
 
+# Additional settings
+for_window [class="Firefox" title="JupyterLab"] floating disable
+for_window [class="Steam"] floating enable
+for_window [class="Processing"] floating enable
+for_window [class="UE4Editor"] floating enable
 #for_window [class="Ardour"] move container to workspace 1
 for_window [class="patchage"] move container to workspace 2
 for_window [class="zynaddsubfx"] floating enable, move container to workspace 3
@@ -41,13 +45,24 @@ for_window [class="Seq64"] floating enable, border none
 #for_window [title="Helm"] floating enable, border none
 for_window [title="amsynth"] floating enable, border none
 
-assign [class="Skype"] 5
+
+# Startup programs
+#exec steam
+#exec skype
+
+# Start shortcuts
+bindsym $mod+Return exec i3-sensible-terminal
+bindsym $mod+Control+Return exec "i3-msg \\"exec firefox; workspace www\\""
+
+
+### Navigation
+
+focus_wrapping no
+mouse_warping none
+#focus_follows_mouse no
 
 # focus urgent
 bindsym $mod+u [urgent="latest"] focus
-
-# start a terminal
-bindsym $mod+Return exec i3-sensible-terminal
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -57,6 +72,7 @@ bindsym $mod+d exec dmenu_run
 
 # lock i3
 bindsym Control+$mod+l exec i3lock -t -f -i ~/.lockscreen/computer-misuse.png
+#bindsym Control+$mod+l exec i3lock --show-failed-attempts -i ~/.wallpaper.png
 
 
 # WIP: wrapper for import screenshots
@@ -98,8 +114,10 @@ bindsym $mod+Shift+space floating toggle
 # change focus between tiling / floating windows
 bindsym $mod+space focus mode_toggle
 
-# workspaces
-bindsym $mod+1 workspace 1
+### Workspace Settings
+
+# Navigation
+bindsym $mod+1 workspace www
 bindsym $mod+2 workspace 2
 bindsym $mod+3 workspace 3
 bindsym $mod+4 workspace 4
@@ -108,8 +126,8 @@ bindsym $mod+6 workspace 6
 bindsym $mod+7 workspace 7
 bindsym $mod+8 workspace 8
 bindsym $mod+9 workspace 9
-bindsym $mod+0 workspace 10
-bindsym $mod+Shift+1 move container to workspace 1
+bindsym $mod+0 workspace music
+bindsym $mod+Shift+1 move container to workspace www
 bindsym $mod+Shift+2 move container to workspace 2
 bindsym $mod+Shift+3 move container to workspace 3
 bindsym $mod+Shift+4 move container to workspace 4
@@ -118,7 +136,11 @@ bindsym $mod+Shift+6 move container to workspace 6
 bindsym $mod+Shift+7 move container to workspace 7
 bindsym $mod+Shift+8 move container to workspace 8
 bindsym $mod+Shift+9 move container to workspace 9
-bindsym $mod+Shift+0 move container to workspace 10
+bindsym $mod+Shift+0 move container to workspace music
+
+# Screen Settings
+workspace www output primary
+workspace music output primary
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
@@ -151,8 +173,37 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
+set_from_resource $foreground i3wm.foreground #000000
+set_from_resource $background i3wm.background #000000
+set_from_resource $c0 i3wm.color0 #FFFFFF
+set_from_resource $c1 i3wm.color1 #FFFFFF
+set_from_resource $c2 i3wm.color2 #FFFFFF
+set_from_resource $c3 i3wm.color3 #FFFFFF
+set_from_resource $c4 i3wm.color4 #FFFFFF
+set_from_resource $c5 i3wm.color5 #FFFFFF
+set_from_resource $c6 i3wm.color6 #FFFFFF
+set_from_resource $c7 i3wm.color7 #FFFFFF
+
+set_from_resource $c8 i3wm.color8 #FFFFFF
+set_from_resource $c9 i3wm.color9 #FFFFFF
+set_from_resource $c10 i3wm.color10 #FFFFFF
+set_from_resource $c11 i3wm.color11 #FFFFFF
+set_from_resource $c12 i3wm.color12 #FFFFFF
+set_from_resource $c13 i3wm.color13 #FFFFFF
+set_from_resource $c14 i3wm.color14 #FFFFFF
+set_from_resource $c15 i3wm.color15 #FFFFFF
+
 # Start i3bar
 bar {
-        status_command i3status
-        #tray_output primary
+    #tray_output HDMI-1-1
+    status_command i3status
+    colors {
+        background $background
+        statusline $foreground
+        separator $foreground
+        inactive_workspace $c0 $c0 $c7
+        focused_workspace $c7 $c7 $c0
+        urgent_workspace $c1 $c9 $c0
+    }
+    font -artwiz-lime-medium-r-normal-*-10-*-*-*-*-*-*-*
 }
