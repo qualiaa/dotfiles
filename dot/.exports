@@ -12,3 +12,7 @@ export CC=gcc
 export CXX=g++
 export LC_COLLATE=C
 export TERMINAL=urxvt
+
+### Work specific exports
+export PATH=/usr/local/cuda-10.1/bin:"$PATH"
+export PYTHONPATH=$PYTHONPATH:$HOME/usr/lib/python3/site-packages
