@@ -37,7 +37,8 @@ This function should only modify configuration layer settings."
      c-c++
      emacs-lisp
      haskell
-     python
+     perl5
+     (python :variables python-test-runner 'pytest)
      shell-scripts
      ;; Data schemas
      json
@@ -484,10 +485,17 @@ Put your configuration code here, except for variables that should be set
 before packages are loaded."
   (setq clang-format-style-option "{BasedOnStyle: Google, IndentWidth: 4}")
   (setq evil-shift-width 4)
+  (setq-default
+   pytest-project-root-files '("setup.py" ".projectile" ".git" ".hg" ".exercism")
+   pytest-global-name "python -m pytest"
+   )
   )
 
-;; Do not write anything past this comment. This is where Emacs will
-;; auto-generate custom variable definitions.
+(defun dotspacemacs/emacs-custom-settings ()
+  "Emacs custom settings.
+This is an auto-generated function, do not modify its content directly, use
+Emacs customize menu instead.
+This function is called at the very end of Spacemacs initialization."
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
