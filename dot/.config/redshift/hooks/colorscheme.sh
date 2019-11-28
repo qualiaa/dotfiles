@@ -1,1 +1,1 @@
-/home/jamie/projects/programming/utils/redshift-hooks/hooks/colorscheme.sh
+../redshift-hooks/hooks/colorscheme.sh

@@ -7,3 +7,6 @@
 [submodule "dot/.urxvt/urxvt-config-reload"]
 	path = dot/.urxvt/urxvt-config-reload
 	url = https://github.com/qualiaa/urxvt-config-reload
+[submodule "dot/.config/redshift/redshift-hooks"]
+	path = dot/.config/redshift/redshift-hooks
+	url = https://github.com/qualiaa/redshift-hooks
