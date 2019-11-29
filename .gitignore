@@ -5,3 +5,6 @@ dot/.config/*
 !dot/.config/redshift
 !dot/.config/emacs
 !dot/.config/sublime-text-3
+
+dot/.vim/bundle/*
+!dot/.vim/bundle/Vundle.vim
