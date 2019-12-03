@@ -39,6 +39,7 @@ This function should only modify configuration layer settings."
      haskell
      perl5
      (python :variables python-test-runner 'pytest)
+     racket
      shell-scripts
      ;; Data schemas
      json

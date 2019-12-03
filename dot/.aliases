@@ -5,13 +5,23 @@ alias rts='sed -i "s/ *$//"'
 alias setbg='feh --bg-fill'
 alias bell='echo -ne "\a"'
 
-command -v jack_control >/dev/null && alias jack='jack_control'
-command -v bluetoothctl >/dev/null && alias bluez="bluetoothctl"
-#alias lime='haxelib run lime'
-#alias flixel='haxelib run flixel-tools'
-#alias idf='idf.py'
+# For this section we don't need stdout
+exec 3>&1 >/dev/null
 
-if command -v stack >/dev/null; then
+command -v jack_control && alias jack='jack_control'
+command -v bluetoothctl && alias bluez="bluetoothctl"
+
+# Haxe convenience aliases
+if command -v haxelib; then
+    alias lime='haxelib run lime'
+    alias flixel='haxelib run flixel-tools'
+fi
+
+# ESP32 dev board alias
+[ -n $IDF_PATH ] && alias idf='idf.py'
+
+# Haskell Stack convenience aliases
+if command -v stack; then
     alias ghc='stack ghc --'
     alias ghci='stack ghci'
     alias runghc='stack runghc'
@@ -19,12 +29,13 @@ if command -v stack >/dev/null; then
     alias ghcid='ghcid --command="stack ghci"'
 fi
 
+# Unified package commands
 if [ -f /etc/debian_version ]; then
     alias pupdate='sudo apt update; sudo apt upgrade'
     alias pinstall='sudo apt install'
     alias psearch='apt search'
     alias puninstall='sudo apt remove'
-elif command -v yay >/dev/null; then
+elif command -v yay; then
     alias pupdate='yay -Syu'
     alias pinstall='yay -S'
     alias psearch='yay -Ss'
@@ -35,3 +46,5 @@ else
     alias psearch='sudo pacman -Ss'
     alias puninstall='sudo pacman -Rs'
 fi
+
+exec >&3 3>&-

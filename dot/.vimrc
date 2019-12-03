@@ -14,10 +14,10 @@ set rnu number
 " Vundle setup
 filetype off
 
-set rtp+=/home/jamie/.vim/bundle/vundle.vim
+set rtp+=/home/jamie/.vim/bundle/Vundle.vim
 call vundle#begin()
 
-Plugin 'VundleVim/vundle.vim'
+Plugin 'VundleVim/Vundle.vim'
 
 " -------------
 " Vundle Plugins
