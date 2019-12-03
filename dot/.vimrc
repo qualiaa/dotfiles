@@ -74,8 +74,15 @@ filetype plugin indent on
 let g:ycm_path_to_python_interpreter = '/usr/bin/python3'
 let g:ycm_global_ycm_extra_conf = '~/.vim/ycm_extra_conf.py'
 let g:ycm_autoclose_preview_window_after_insertion = 1
+let g:ycm_always_populate_location_list = 1
 " let g:ycm_python_binary_path = "/usr/bin/python"
 
+nnoremap gd :YcmCompleter GoToDeclaration<CR>
+nnoremap gD :YcmCompleter GoToDefinition<CR>
+" Note this somewhat supercedes a.vim
+nnoremap gA :YcmCompleter GoToInclude<CR>
+nnoremap <C-x> :YcmCompleter FixIt<CR>
+nnoremap <C-t> :YcmCompleter GetTypeImprecise<CR>
 
 " Powerline
 set rtp+=/home/jamie/.vim/bundle/powerline/powerline/bindings/vim
@@ -140,7 +147,7 @@ nmap <F2> :NERDTreeToggle<CR>
 " F4 opens vimrc
 nnoremap <F4> :tabe ~/.vimrc<CR>
 " F5 forces YCM diagnostics
-" nnoremap <F3> :YcmForceCompileAndDiagnostics<CR>
+" nnoremap <F5> :YcmForceCompileAndDiagnostics<CR>
 
 " F7 toggles hlsearch
 let hlstate=0
@@ -223,6 +230,9 @@ endif
 " -----------
 
 if &t_Co > 2 || has("gui_running")
+    syntax match TrailingWhiteSpace /[ \t]\+$/
+    hi link TrailingWhiteSpace ErrorMsg
+
     hi Folded cterm=NONE ctermbg=11 ctermfg=8
     hi FoldColumn cterm=NONE ctermbg=black ctermfg=white
     hi CursorLine cterm=NONE ctermbg=NONE ctermfg=NONE
@@ -244,7 +254,11 @@ if &t_Co > 2 || has("gui_running")
         au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
         au WinLeave * setlocal nocursorline
     augroup END
+
+    syntax on
 endif
+
+highlight EndOfBuffer ctermfg=bg ctermbg=bg
 
 
 
