@@ -6,7 +6,7 @@
 [ -d ~/.miniconda3 ] && PATH="$HOME/.miniconda3/bin:$PATH"
 export PATH
 
-export EDITOR=emacs
+export EDITOR=vim
 export BROWSER=xdg-open
 export CC=gcc
 export CXX=g++
