@@ -42,6 +42,7 @@ This function should only modify configuration layer settings."
      racket
      shell-scripts
      ;; Data schemas
+     csv
      json
      yaml
      ;; Text editing
@@ -51,8 +52,10 @@ This function should only modify configuration layer settings."
      auto-completion
      cmake
      dap
+     docker
      git
      (helm :variables helm-enable-auto-resize t)
+     ipython-notebook
      lsp
      ;; UI
      multiple-cursors
@@ -287,7 +290,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; Which-key delay in seconds. The which-key buffer is the popup listing
    ;; the commands bound to the current keystroke sequence. (default 0.4)
-   dotspacemacs-which-key-delay 0.5
+   dotspacemacs-which-key-delay 0.4
 
    ;; Which-key frame position. Possible values are `right', `bottom' and
    ;; `right-then-bottom'. right-then-bottom tries to display the frame to the
@@ -483,11 +486,18 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
+  (setq code-modes '(c-c++-mode-hooks
+                     python-mode-hook
+                     haskell-mode
+                     shell-mode))
+  (mapc (function (lambda (x) (add-hook x 'spacemacs/toggle-fill-column-indicator-on)))
+       code-modes)
   (setq-default
    ;; EVIL settings
    evil-shift-width 4
 
    ;; C++ settings
+   c-basic-offset 4
    clang-format-style-option "{BasedOnStyle: Google, IndentWidth: 4}"
 
    ;; Python settings
@@ -495,6 +505,8 @@ before packages are loaded."
    pytest-global-name "python -m pytest"
   )
   (setenv "WORKON_HOME" "/home/jamie/.miniconda3/envs")
+  ;(sp-pair "'" nil :actions :rem)
+  ;(sp-pair "\"" nil :actions :rem)
 )
 
 (defun dotspacemacs/emacs-custom-settings ()
