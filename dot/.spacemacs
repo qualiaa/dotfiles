@@ -42,6 +42,7 @@ This function should only modify configuration layer settings."
      racket
      shell-scripts
      ;; Data schemas
+     csv
      json
      yaml
      ;; Text editing
@@ -51,8 +52,10 @@ This function should only modify configuration layer settings."
      auto-completion
      cmake
      dap
+     docker
      git
      (helm :variables helm-enable-auto-resize t)
+     ipython-notebook
      lsp
      ;; UI
      multiple-cursors
