@@ -492,6 +492,17 @@ before packages are loaded."
                      shell-mode))
   (mapc (function (lambda (x) (add-hook x 'spacemacs/toggle-fill-column-indicator-on)))
        code-modes)
+
+  ;; Org mode settings
+  (with-eval-after-load 'org
+    (require 'org-checklist)
+    (setq org-agenda-files (directory-files-recursively "~/org" "\.org$")
+          org-todo-keywords '((sequence "TODO" "DOING" "VERIFY" "|" "DONE"))
+          org-todo-keyword-faces '(("DOING" . "orange") ("VERIFY" . "blue"))
+          org-agenda-dim-blocked-tasks t
+          org-bullets-bullet-list '("○" "◉" "✿" "✸")))
+
+
   (setq-default
    ;; EVIL settings
    evil-shift-width 4
