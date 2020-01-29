@@ -3,7 +3,7 @@
 [ -d ~/usr/bin ]     && PATH="$HOME/usr/bin:$PATH"
 [ -d ~/bin ]         && PATH="$HOME/bin:$PATH"
 [ -d ~/.local/bin ]  && PATH="$HOME/.local/bin:$PATH"
-[ -d ~/.miniconda3 ] && PATH="$HOME/.miniconda3/bin:$PATH"
+#[ -d ~/.miniconda3 ] && PATH="$HOME/.miniconda3/bin:$PATH"
 export PATH
 
 export EDITOR=vim

@@ -36,7 +36,7 @@ This function should only modify configuration layer settings."
      ;; Languages
      c-c++
      emacs-lisp
-     haskell
+     (haskell :variables haskell-completion-backend 'ghci)
      perl5
      (python :variables python-test-runner 'pytest)
      racket
@@ -55,7 +55,7 @@ This function should only modify configuration layer settings."
      docker
      git
      (helm :variables helm-enable-auto-resize t)
-     ipython-notebook
+     ;ipython-notebook
      lsp
      ;; UI
      multiple-cursors
@@ -486,12 +486,40 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
+
+  ;; General coding settings
   (setq code-modes '(c-c++-mode-hooks
                      python-mode-hook
                      haskell-mode
                      shell-mode))
   (mapc (function (lambda (x) (add-hook x 'spacemacs/toggle-fill-column-indicator-on)))
        code-modes)
+
+  ;; Disable ' and " matching
+  ;(sp-pair "'" nil :actions :rem)
+  ;(sp-pair "\"" nil :actions :rem)
+
+  ;; Org settings
+  (with-eval-after-load 'org
+    (require 'org-checklist)
+    (setq ;; TODO settings
+          org-todo-keywords '((sequence "TODO" "DOING" "VERIFY" "|" "DONE"))
+          org-todo-keyword-faces '(("DOING" . "orange") ("VERIFY" . "blue"))
+
+          ;; Agenda
+          org-agenda-files (directory-files-recursively "~/org" "\.org$")
+          org-agenda-dim-blocked-tasks t
+          org-agenda-files (directory-files-recursively "~/org" "\.org$")
+          org-agenda-todo-ignore-scheduled 'future
+          org-agenda-tags-todo-honor-ignore-options t
+
+          ;; Rendering
+          org-bullets-bullet-list '("○" "◉" "✿" "✸")
+          org-preview-latex-default-process 'dvisvgm
+          org-format-latex-options (append '(:scale 1.5) org-format-latex-options))
+    (org-toggle-pretty-entities))
+
+
   (setq-default
    ;; EVIL settings
    evil-shift-width 4
@@ -502,11 +530,9 @@ before packages are loaded."
 
    ;; Python settings
    pytest-project-root-files '("setup.py" ".projectile" ".git" ".hg" ".exercism")
-   pytest-global-name "python -m pytest"
-  )
+   pytest-global-name "python -m pytest")
+
   (setenv "WORKON_HOME" "/home/jamie/.miniconda3/envs")
-  ;(sp-pair "'" nil :actions :rem)
-  ;(sp-pair "\"" nil :actions :rem)
 )
 
 (defun dotspacemacs/emacs-custom-settings ()
@@ -519,13 +545,5 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(evil-want-Y-yank-to-eol nil)
- '(helm-completion-style 'emacs)
- '(package-selected-packages
-   '(insert-shebang fish-mode disaster cmake-mode clang-format solarized-dark-highcontrast-theme zenburn-theme zen-and-art-theme white-sand-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme toxi-theme tao-theme tangotango-theme tango-plus-theme tango-2-theme sunny-day-theme sublime-themes subatomic256-theme subatomic-theme spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme smeargle seti-theme reverse-theme rebecca-theme railscasts-theme purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme orgit organic-green-theme org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme magit-gitflow magit-popup madhat2r-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme htmlize heroku-theme hemisu-theme helm-gitignore hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gandalf-theme flatui-theme flatland-theme farmhouse-theme exotica-theme evil-magit magit transient git-commit with-editor espresso-theme dracula-theme django-theme darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme mmm-mode markdown-toc markdown-mode gh-md intero flycheck hlint-refactor hindent helm-hoogle haskell-snippets yasnippet company-ghci company-ghc ghc company haskell-mode cmm-mode yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode dash-functional helm-pydoc cython-mode anaconda-mode pythonic ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra lv hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile projectile pkg-info epl helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist highlight evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:background nil))))))
+ '(org-agenda-files '("~/org/chores.org" "~/org/tasks.org")))
+)
