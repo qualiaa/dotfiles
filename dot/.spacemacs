@@ -490,10 +490,11 @@ before packages are loaded."
   ;; General coding settings
   (setq code-modes '(c-c++-mode-hooks
                      python-mode-hook
-                     haskell-mode
-                     shell-mode))
+                     haskell-mode-hook
+                     racket-mode-hook
+                     shell-mode-hook))
   (mapc (function (lambda (x) (add-hook x 'spacemacs/toggle-fill-column-indicator-on)))
-       code-modes)
+       (append code-modes '(markdown-mode-hook org-mode-hook)))
 
   ;; Disable ' and " matching
   ;(sp-pair "'" nil :actions :rem)
