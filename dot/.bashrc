@@ -5,7 +5,8 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
-alias ls='ls --color=auto'
+[ -f ~/.aliases ] && source ~/.aliases
+[ -f ~/.dircolors ] && eval `dircolors ~/.dircolors`
 PS1='[\u@\h \W]\$ '
 
 # >>> conda initialize >>>
