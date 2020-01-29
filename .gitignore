@@ -9,3 +9,4 @@ dot/.config/*
 
 dot/.vim/bundle/*
 !dot/.vim/bundle/Vundle.vim
+.ghc/ghci_history

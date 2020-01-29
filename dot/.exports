@@ -15,10 +15,10 @@ PATH=$IDF_PATH/tools:"$PATH"
 [ -d ~/usr/bin ]     && PATH="$HOME/usr/bin:$PATH"
 [ -d ~/bin ]         && PATH="$HOME/bin:$PATH"
 [ -d ~/.local/bin ]  && PATH="$HOME/.local/bin:$PATH"
-[ -d ~/.miniconda3 ] && PATH="$HOME/.miniconda3/bin:$PATH"
+#[ -d ~/.miniconda3 ] && PATH="$HOME/.miniconda3/bin:$PATH"
 export PATH
 
-export EDITOR=emacs
+export EDITOR=vim
 export BROWSER=xdg-open
 export CC=gcc
 export CXX=g++
