@@ -493,14 +493,25 @@ before packages are loaded."
   (mapc (function (lambda (x) (add-hook x 'spacemacs/toggle-fill-column-indicator-on)))
        code-modes)
 
-  ;; Org mode settings
+  ;; Org settings
   (with-eval-after-load 'org
     (require 'org-checklist)
-    (setq org-agenda-files (directory-files-recursively "~/org" "\.org$")
+    (setq ;; TODO settings
           org-todo-keywords '((sequence "TODO" "DOING" "VERIFY" "|" "DONE"))
           org-todo-keyword-faces '(("DOING" . "orange") ("VERIFY" . "blue"))
+
+          ;; Agenda
+          org-agenda-files (directory-files-recursively "~/org" "\.org$")
           org-agenda-dim-blocked-tasks t
-          org-bullets-bullet-list '("○" "◉" "✿" "✸")))
+          org-agenda-files (directory-files-recursively "~/org" "\.org$")
+          org-agenda-todo-ignore-scheduled 'future
+          org-agenda-tags-todo-honor-ignore-options t
+
+          ;; Rendering
+          org-bullets-bullet-list '("○" "◉" "✿" "✸")
+          org-preview-latex-default-process 'dvisvgm
+          org-format-latex-options (append '(:scale 1.5) org-format-latex-options))
+    (org-toggle-pretty-entities))
 
 
   (setq-default
@@ -518,15 +529,6 @@ before packages are loaded."
 
   (with-eval-after-load 'comint
     (define-key comint-mode-map "\C-d" nil))
-
-  ; Org settings
-  (with-eval-after-load 'org
-    (setq org-agenda-files (directory-files-recursively "~/org" "\.org$")
-          org-agenda-todo-ignore-scheduled 'future
-          org-agenda-tags-todo-honor-ignore-options t
-          org-preview-latex-default-process 'dvisvgm
-          org-format-latex-options (append '(:scale 1.5) org-format-latex-options))
-    (org-toggle-pretty-entities))
 
   (setenv "WORKON_HOME" "/home/jamie/.miniconda3/envs")
   ;(sp-pair "'" nil :actions :rem)
