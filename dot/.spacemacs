@@ -486,12 +486,18 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
+
+  ;; General coding settings
   (setq code-modes '(c-c++-mode-hooks
                      python-mode-hook
                      haskell-mode
                      shell-mode))
   (mapc (function (lambda (x) (add-hook x 'spacemacs/toggle-fill-column-indicator-on)))
        code-modes)
+
+  ;; Disable ' and " matching
+  ;(sp-pair "'" nil :actions :rem)
+  ;(sp-pair "\"" nil :actions :rem)
 
   ;; Org settings
   (with-eval-after-load 'org
@@ -526,13 +532,7 @@ before packages are loaded."
    pytest-project-root-files '("setup.py" ".projectile" ".git" ".hg" ".exercism")
    pytest-global-name "python -m pytest")
 
-
-  (with-eval-after-load 'comint
-    (define-key comint-mode-map "\C-d" nil))
-
   (setenv "WORKON_HOME" "/home/jamie/.miniconda3/envs")
-  ;(sp-pair "'" nil :actions :rem)
-  ;(sp-pair "\"" nil :actions :rem)
 )
 
 (defun dotspacemacs/emacs-custom-settings ()
