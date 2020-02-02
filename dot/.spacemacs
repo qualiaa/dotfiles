@@ -486,12 +486,41 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
+
+  ;; General coding settings
   (setq code-modes '(c-c++-mode-hooks
                      python-mode-hook
-                     haskell-mode
-                     shell-mode))
+                     haskell-mode-hook
+                     racket-mode-hook
+                     shell-mode-hook))
   (mapc (function (lambda (x) (add-hook x 'spacemacs/toggle-fill-column-indicator-on)))
-       code-modes)
+       (append code-modes '(markdown-mode-hook org-mode-hook)))
+
+  ;; Disable ' and " matching
+  ;(sp-pair "'" nil :actions :rem)
+  ;(sp-pair "\"" nil :actions :rem)
+
+  ;; Org settings
+  (with-eval-after-load 'org
+    (require 'org-checklist)
+    (setq ;; TODO settings
+          org-todo-keywords '((sequence "TODO" "DOING" "VERIFY" "|" "DONE"))
+          org-todo-keyword-faces '(("DOING" . "orange") ("VERIFY" . "blue"))
+
+          ;; Agenda
+          org-agenda-files (directory-files-recursively "~/org" "\.org$")
+          org-agenda-dim-blocked-tasks t
+          org-agenda-files (directory-files-recursively "~/org" "\.org$")
+          org-agenda-todo-ignore-scheduled 'future
+          org-agenda-tags-todo-honor-ignore-options t
+
+          ;; Rendering
+          org-bullets-bullet-list '("○" "◉" "✿" "✸")
+          org-preview-latex-default-process 'dvisvgm
+          org-format-latex-options (append '(:scale 1.5) org-format-latex-options))
+    (org-toggle-pretty-entities))
+
+
   (setq-default
    ;; EVIL settings
    evil-shift-width 4
@@ -504,33 +533,5 @@ before packages are loaded."
    pytest-project-root-files '("setup.py" ".projectile" ".git" ".hg" ".exercism")
    pytest-global-name "python -m pytest")
 
-
-  (with-eval-after-load 'comint
-    (define-key comint-mode-map "\C-d" nil))
-
-  ; Org settings
-  (with-eval-after-load 'org
-    (setq org-agenda-files (directory-files-recursively "~/org" "\.org$")
-          org-agenda-todo-ignore-scheduled 'future
-          org-agenda-tags-todo-honor-ignore-options t
-          org-preview-latex-default-process 'dvisvgm
-          org-format-latex-options (append '(:scale 1.5) org-format-latex-options))
-    (org-toggle-pretty-entities))
-
   (setenv "WORKON_HOME" "/home/jamie/.miniconda3/envs")
-  ;(sp-pair "'" nil :actions :rem)
-  ;(sp-pair "\"" nil :actions :rem)
-)
-
-(defun dotspacemacs/emacs-custom-settings ()
-  "Emacs custom settings.
-This is an auto-generated function, do not modify its content directly, use
-Emacs customize menu instead.
-This function is called at the very end of Spacemacs initialization."
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(org-agenda-files '("~/org/chores.org" "~/org/tasks.org")))
 )

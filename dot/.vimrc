@@ -297,3 +297,12 @@ augroup Haxe
     " au BufWritePost *.hx VaxeCtags
     au BufNewFile,BufRead /source/*.hx vaxe#ProjectLime("Project.xml")
 augroup END
+" When started as "evim", evim.vim will already have done these settings.
+if v:progname =~? "evim"
+    finish
+endif
+
+if &t_Co > 2 || has("gui_running")
+    syntax match TrailingWhiteSpace /[ \t]\+$/
+    hi link TrailingWhiteSpace ErrorMsg
+endif
