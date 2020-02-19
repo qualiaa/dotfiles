@@ -10,10 +10,10 @@ mouse_warping none
 # Gaps
 gaps inner 20
 
-# Font
-# (good for high dpi)
+# font
+# good for high dpi
 font pango:Noto Mono 8
-# (good for low dpi)
+# good for low dpi
 #font pango:lime 8
 #font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
 
@@ -36,6 +36,10 @@ for_window [class="Firefox" title="JupyterLab"] floating disable
 for_window [class="Steam"] floating enable
 for_window [class="Processing"] floating enable
 for_window [class="UE4Editor"] floating enable
+assign [class="discord"] 9
+assign [class="Clementine"] 10
+for_window [class="Firefox" title="JupyterLab"] floating disable
+
 #for_window [class="Ardour"] move container to workspace 1
 for_window [class="patchage"] move container to workspace 2
 for_window [class="zynaddsubfx"] floating enable, move container to workspace 3
@@ -71,7 +75,6 @@ bindsym $mod+d exec dmenu_run
 
 # lock i3
 bindsym Control+$mod+l exec i3lock -t -f -i ~/.lockscreen/computer-misuse.png
-#bindsym Control+$mod+l exec i3lock --show-failed-attempts -i ~/.wallpaper.png
 
 
 # WIP: wrapper for import screenshots
