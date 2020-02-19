@@ -496,6 +496,8 @@ before packages are loaded."
   (mapc (function (lambda (x) (add-hook x 'spacemacs/toggle-fill-column-indicator-on)))
        (append code-modes '(markdown-mode-hook org-mode-hook)))
 
+  (setq flycheck-highlighting-mode 'lines)
+
   ;; Disable ' and " matching
   ;(sp-pair "'" nil :actions :rem)
   ;(sp-pair "\"" nil :actions :rem)
@@ -503,21 +505,23 @@ before packages are loaded."
   ;; Org settings
   (with-eval-after-load 'org
     (require 'org-checklist)
-    (setq ;; TODO settings
-          org-todo-keywords '((sequence "TODO" "DOING" "VERIFY" "|" "DONE"))
-          org-todo-keyword-faces '(("DOING" . "orange") ("VERIFY" . "blue"))
+    (setq
+      org-default-notes-file (concat org-directory "/work.org")
 
-          ;; Agenda
-          org-agenda-files (directory-files-recursively "~/org" "\.org$")
-          org-agenda-dim-blocked-tasks t
-          org-agenda-files (directory-files-recursively "~/org" "\.org$")
-          org-agenda-todo-ignore-scheduled 'future
-          org-agenda-tags-todo-honor-ignore-options t
+      ;; TODO settings
+      org-todo-keywords '((sequence "TODO" "DOING" "VERIFY" "|" "DONE"))
+      org-todo-keyword-faces '(("DOING" . "orange") ("VERIFY" . "blue"))
 
-          ;; Rendering
-          org-bullets-bullet-list '("○" "◉" "✿" "✸")
-          org-preview-latex-default-process 'dvisvgm
-          org-format-latex-options (append '(:scale 1.5) org-format-latex-options))
+      ;; Agenda
+      org-agenda-files (directory-files-recursively "~/org" "\.org$")
+      org-agenda-dim-blocked-tasks t
+      org-agenda-todo-ignore-scheduled 'future
+      org-agenda-tags-todo-honor-ignore-options t
+
+      ;; Rendering
+      org-bullets-bullet-list '("○" "◉" "✿" "✸")
+      org-preview-latex-default-process 'dvisvgm
+      org-format-latex-options (append '(:scale 1.5) org-format-latex-options))
     (org-toggle-pretty-entities))
 
 
@@ -534,4 +538,5 @@ before packages are loaded."
    pytest-global-name "python -m pytest")
 
   (setenv "WORKON_HOME" "/home/jamie/.miniconda3/envs")
+  (pyvenv-workon 'base-devel)
 )
