@@ -1,7 +1,0 @@
-|22638                |22637                |1794   |emu              |                     |man takes a photo of himself every day for eight years
-|tenkizoti-1          |tenkizoti            |1794   |yellowbaron      |                     |tiny sim 1.0
-|catataplasma-0       |catataplasma         |1794   |catatafish       |                     |catataplasma
-|white_ale_in_benin-0 |white_ale_in_benin   |1794   |jobe             |                     |white ale in benin
-|shadowsofdunwich-0   |shadowsofdunwich     |1794   |paranoidcactus   |                     |shadows of dunwich 1.0
-|                     |                     |0      |                 |ones.p8.png          |ones
-|                     |                     |0      |                 |ones.p8              |ones
