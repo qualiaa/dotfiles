@@ -45,9 +45,10 @@ This function should only modify configuration layer settings."
      csv
      json
      yaml
-     ;; Text editing
+     ;; Text editing and note taking
      markdown
      org
+     deft
      ;; Development tools
      auto-completion
      cmake
@@ -77,7 +78,9 @@ This function should only modify configuration layer settings."
    ;; To use a local version of a package, use the `:location' property:
    ;; '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages
+   '(el-patch
+     (org-roam :location (recipe :fetcher github :repo "jethrokuan/org-roam" :branch "develop")))
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -500,6 +503,26 @@ before packages are loaded."
   ;(sp-pair "'" nil :actions :rem)
   ;(sp-pair "\"" nil :actions :rem)
 
+  ;; Deft settings
+  (with-eval-after-load 'deft
+    (setq deft-directory "~/org/notes"
+          deft-recursive t
+          deft-use-filename-as-title t
+          deft-org-mode-title-prefix t
+          deft-markdown-mode-title-level 2))
+
+  (require 'org-roam)
+  (org-roam--build-cache-async)
+  (setq org-roam-directory "~/org/notes"
+        org-roam-link-title-format "§%s")
+  (spacemacs/declare-prefix "ar" "org-roam")
+  (spacemacs/set-leader-keys "arr" 'org-roam)
+  (spacemacs/set-leader-keys "art" 'org-roam-today)
+  (spacemacs/set-leader-keys "arf" 'org-roam-find-file)
+  (spacemacs/set-leader-keys "ari" 'org-roam-insert)
+  (spacemacs/set-leader-keys "arg" 'org-roam-show-graph)
+  (add-hook 'org-mode-hook 'org-roam-mode)
+
   ;; Org settings
   (with-eval-after-load 'org
     (require 'org-checklist)
@@ -510,7 +533,6 @@ before packages are loaded."
           ;; Agenda
           org-agenda-files (directory-files-recursively "~/org" "\.org$")
           org-agenda-dim-blocked-tasks t
-          org-agenda-files (directory-files-recursively "~/org" "\.org$")
           org-agenda-todo-ignore-scheduled 'future
           org-agenda-tags-todo-honor-ignore-options t
 
