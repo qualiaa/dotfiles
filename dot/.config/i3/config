@@ -47,6 +47,9 @@ for_window [title="amsynth"] floating enable, border none
 
 
 # Startup programs
+exec slack
+exec firefox
+exec emacs
 #exec steam
 #exec skype
 
