@@ -1,14 +1,18 @@
 pip_interop_enabled: true
+channels:
+  - conda-forge
+  - defaults
 create_default_packages:
-    - hypothesis
-    - tox
-    - pylint
-    - flake8
-    - ipython
-    - python-language-server
-    - ptvsd>=4.2
-    - pytest
-    - epc
-    - pip
-    - pip:
-        - importmagic
+  - hypothesis
+  - tox
+  - pylint
+  - flake8
+  - ipython
+  - ptvsd>=4.2
+  - pytest
+  - epc
+  - python-language-server[all]
+  - black
+  - isort
+  - autoflake
+  - pip
