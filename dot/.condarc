@@ -1,0 +1,14 @@
+pip_interop_enabled: true
+create_default_packages:
+    - hypothesis
+    - tox
+    - pylint
+    - flake8
+    - ipython
+    - python-language-server
+    - ptvsd>=4.2
+    - pytest
+    - epc
+    - pip
+    - pip:
+        - importmagic
