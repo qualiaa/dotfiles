@@ -522,6 +522,7 @@ before packages are loaded."
   (spacemacs/set-leader-keys "ari" 'org-roam-insert)
   (spacemacs/set-leader-keys "arg" 'org-roam-show-graph)
   (add-hook 'org-mode-hook 'org-roam-mode)
+  (evil-define-key 'insert org-roam-mode-map (kbd "C-c i") 'org-roam-insert)
 
   ;; Org settings
   (with-eval-after-load 'org
