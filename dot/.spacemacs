@@ -526,20 +526,17 @@ before packages are loaded."
   ;; Org settings
   (with-eval-after-load 'org
     (require 'org-checklist)
-    (setq ;; TODO settings
-          org-todo-keywords '((sequence "TODO" "DOING" "VERIFY" "|" "DONE"))
-          org-todo-keyword-faces '(("DOING" . "orange") ("VERIFY" . "blue"))
+    (setq
+      ;; Agenda
+      org-agenda-files (directory-files-recursively "~/org" "\.org$")
+      org-agenda-dim-blocked-tasks t
+      org-agenda-todo-ignore-scheduled 'future
+      org-agenda-tags-todo-honor-ignore-options t
 
-          ;; Agenda
-          org-agenda-files (directory-files-recursively "~/org" "\.org$")
-          org-agenda-dim-blocked-tasks t
-          org-agenda-todo-ignore-scheduled 'future
-          org-agenda-tags-todo-honor-ignore-options t
-
-          ;; Rendering
-          org-bullets-bullet-list '("○" "◉" "✿" "✸")
-          org-preview-latex-default-process 'dvisvgm
-          org-format-latex-options (append '(:scale 1.5) org-format-latex-options))
+      ;; Rendering
+      org-bullets-bullet-list '("○" "◉" "✿" "✸")
+      org-preview-latex-default-process 'dvisvgm
+      org-format-latex-options (append '(:scale 1.5) org-format-latex-options))
     (org-toggle-pretty-entities))
 
 
