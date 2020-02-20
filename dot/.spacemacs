@@ -512,9 +512,9 @@ before packages are loaded."
           deft-markdown-mode-title-level 2))
 
   (require 'org-roam)
-  (org-roam--build-cache-async)
   (setq org-roam-directory "~/org/notes"
         org-roam-link-title-format "§%s")
+  (org-roam--build-cache-async)
   (spacemacs/declare-prefix "ar" "org-roam")
   (spacemacs/set-leader-keys "arr" 'org-roam)
   (spacemacs/set-leader-keys "art" 'org-roam-today)
