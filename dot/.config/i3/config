@@ -27,6 +27,7 @@ client.urgent           #CC0000 #CC0000 #ffffff #900000   #900000
 # program settings
 assign [class="Firefox"] 1:www
 assign [class="Skype"] 9:comms
+assign [class="Slack"] 9:comms
 assign [class="discord"] 9:comms
 assign [class="Clementine"] 10:music
 assign [class="Spotify"] 10:music
@@ -36,9 +37,6 @@ for_window [class="Firefox" title="JupyterLab"] floating disable
 for_window [class="Steam"] floating enable
 for_window [class="Processing"] floating enable
 for_window [class="UE4Editor"] floating enable
-assign [class="discord"] 9
-assign [class="Clementine"] 10
-for_window [class="Firefox" title="JupyterLab"] floating disable
 
 #for_window [class="Ardour"] move container to workspace 1
 for_window [class="patchage"] move container to workspace 2
