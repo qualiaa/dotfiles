@@ -14,5 +14,10 @@ create_default_packages:
   - python-language-server[all]
   - black
   - isort
+  - mypy
   - autoflake
   - pip
+# pyls-mypy
+# pyls-black
+# pyls-isort
+# importmagic
