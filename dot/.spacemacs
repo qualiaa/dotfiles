@@ -45,6 +45,8 @@ This function should only modify configuration layer settings."
      csv
      json
      yaml
+     ;; Other configuration
+     nginx
      ;; Text editing and note taking
      markdown
      org
