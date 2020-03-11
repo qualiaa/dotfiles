@@ -75,7 +75,6 @@ bindsym $mod+d exec dmenu_run
 
 # lock i3
 bindsym Control+$mod+l exec i3lock -t -f -i ~/.lockscreen/computer-misuse.png
-#bindsym Control+$mod+l exec i3lock --show-failed-attempts -i ~/.wallpaper.png
 
 
 # WIP: wrapper for import screenshots

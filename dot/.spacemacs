@@ -36,6 +36,7 @@ This function should only modify configuration layer settings."
      ;; Languages
      c-c++
      emacs-lisp
+     gpu
      (haskell :variables haskell-completion-backend 'ghci)
      perl5
      (python :variables python-test-runner 'pytest)
@@ -45,10 +46,13 @@ This function should only modify configuration layer settings."
      csv
      json
      yaml
+     ;; Other configuration
+     nginx
      ;; Text editing and note taking
      markdown
      org
      deft
+     bibtex
      ;; Development tools
      auto-completion
      cmake
@@ -329,7 +333,7 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil the frame is undecorated when Emacs starts up. Combine this
    ;; variable with `dotspacemacs-maximized-at-startup' in OSX to obtain
    ;; borderless fullscreen. (default nil)
-   dotspacemacs-undecorated-at-startup nil
+   dotspacemacs-undecorated-at-startup t
 
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
