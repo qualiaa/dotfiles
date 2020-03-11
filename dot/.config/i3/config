@@ -3,6 +3,7 @@ set $audio_player clementine
 
 floating_modifier $mod
 
+exec xrandr --output HDMI-1-1 --right-of eDP-1-1 --mode 1920x1080
 
 ### Appearance
 # Gaps
