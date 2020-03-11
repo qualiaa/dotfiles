@@ -50,6 +50,7 @@ for_window [title="amsynth"] floating enable, border none
 exec slack
 exec firefox
 exec emacs
+exec nextcloud
 #exec steam
 #exec skype
 
