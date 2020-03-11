@@ -36,6 +36,7 @@ This function should only modify configuration layer settings."
      ;; Languages
      c-c++
      emacs-lisp
+     gpu
      (haskell :variables haskell-completion-backend 'ghci)
      perl5
      (python :variables python-test-runner 'pytest)
@@ -51,6 +52,7 @@ This function should only modify configuration layer settings."
      markdown
      org
      deft
+     bibtex
      ;; Development tools
      auto-completion
      cmake
