@@ -488,6 +488,15 @@ This function is called only while dumping Spacemacs configuration. You can
 dump."
   )
 
+;;; TODO Move into custom library
+(defun latex-vectorify ()
+  "Format region or read-string as LaTeX vector"
+  (interactive)
+  (let ((text (if (use-region-p)
+                  (delete-and-extract-region (region-beginning) (region-end))
+                (read-string "Vector name: "))))
+    (insert "\\mathbf{" text "}")))
+
 (defun dotspacemacs/user-config ()
   "Configuration for user code:
 This function is called at the very end of Spacemacs startup, after layer
@@ -556,6 +565,10 @@ before packages are loaded."
           org-format-latex-options (append '(:scale 1.5) org-format-latex-options))
     (org-toggle-pretty-entities))
 
+  ;; My own functions
+  (spacemacs/set-leader-keys-for-major-mode 'org-mode
+    "iv" 'latex-vectorify)
+  (evil-define-key 'insert org-roam-mode-map (kbd "C-c v") 'latex-vectorify)
 
   (setq-default
    ;; EVIL settings
