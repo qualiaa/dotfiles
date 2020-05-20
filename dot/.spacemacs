@@ -482,6 +482,9 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
+  ; stop custom file
+  (setq custom-file (make-temp-file "garbo"))
+  (load custom-file)
   )
 
 (defun dotspacemacs/user-load ()
