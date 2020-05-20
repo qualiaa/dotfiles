@@ -39,7 +39,10 @@ This function should only modify configuration layer settings."
      gpu
      (haskell :variables haskell-completion-backend 'ghci)
      perl5
-     (python :variables python-test-runner 'pytest)
+     (python :variables
+             python-backend 'lsp
+             lsp-server 'pyls
+             python-test-runner 'pytest)
      racket
      shell-scripts
      ;; Data schemas
