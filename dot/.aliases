@@ -1,12 +1,42 @@
 alias open='xdg-open'
 alias zz='source $ZSHRC'
 alias zshrc='vim $ZSHRC; zz'
-alias rts='sed -i "s/ *$//"'
 alias setbg='feh --bg-fill'
 alias bell='echo -ne "\a"'
 
 # For this section we don't need stdout
 exec 3>&1 >/dev/null
+
+# Docker aliases
+if command -v docker 2>/dev/null; then
+    alias dat='docker attach'
+    alias dcom='docker commit'
+    alias dt='docker tag'
+    alias dr='docker run'
+    alias dR='docker run -it --rm'
+    alias db='docker build'
+    alias dp='docker push'
+    alias dl='docker pull'
+    alias ds='docker start'
+    alias dS='docker save'
+    alias dL='docker load'
+    alias din='docker inspect'
+
+    alias dc='docker container'
+    alias dcl='docker container ls'
+    alias dcla='docker container ls --all'
+    alias dcs='docker container stop'
+    alias dcp='docker container prune'
+    alias dcrm='docker container rm'
+    alias di='docker image'
+    alias dil='docker image ls'
+    alias dila='docker image ls --all'
+    alias dip='docker image prune'
+    alias dirm='docker image rm'
+    alias dv='docker volume'
+    alias dvl='docker volume ls'
+fi
+
 
 command -v jack_control && alias jack='jack_control'
 command -v bluetoothctl && alias bluez="bluetoothctl"
