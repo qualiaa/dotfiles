@@ -36,6 +36,7 @@ This function should only modify configuration layer settings."
      ;; Languages
      c-c++
      emacs-lisp
+     lua
      gpu
      (haskell :variables haskell-completion-backend 'ghci)
      perl5
@@ -494,6 +495,15 @@ This function is called only while dumping Spacemacs configuration. You can
 dump."
   )
 
+;;; TODO Move into custom library
+(defun latex-vectorify ()
+  "Format region or read-string as LaTeX vector"
+  (interactive)
+  (let ((text (if (use-region-p)
+                  (delete-and-extract-region (region-beginning) (region-end))
+                (read-string "Vector name: "))))
+    (insert "\\mathbf{" text "}")))
+
 (defun dotspacemacs/user-config ()
   "Configuration for user code:
 This function is called at the very end of Spacemacs startup, after layer
@@ -520,20 +530,27 @@ before packages are loaded."
   (with-eval-after-load 'deft
     (setq deft-directory "~/org/notes"
           deft-recursive t
-          deft-use-filename-as-title t
+          deft-use-filename-as-title nil
           deft-org-mode-title-prefix t
           deft-markdown-mode-title-level 2))
 
   (require 'org-roam)
   (setq org-roam-directory "~/org/notes"
         org-roam-link-title-format "§%s")
-  ;; (org-roam-build-cache)
   (spacemacs/declare-prefix "ar" "org-roam")
-  (spacemacs/set-leader-keys "arr" 'org-roam)
-  (spacemacs/set-leader-keys "art" 'org-roam-today)
-  (spacemacs/set-leader-keys "arf" 'org-roam-find-file)
-  (spacemacs/set-leader-keys "ari" 'org-roam-insert)
-  (spacemacs/set-leader-keys "arg" 'org-roam-graph)
+  (spacemacs/set-leader-keys
+    "arr" 'org-roam
+    "art" 'org-roam-dailies-today
+    "arf" 'org-roam-find-file
+    "ari" 'org-roam-insert
+    "arg" 'org-roam-graph)
+  (spacemacs/declare-prefix-for-mode 'org-mode "mr" "org-roam")
+  (spacemacs/set-leader-keys-for-major-mode 'org-mode
+    "rr" 'org-roam
+    "rt" 'org-roam-dailies-today
+    "rf" 'org-roam-find-file
+    "ri" 'org-roam-insert
+    "rg" 'org-roam-graph)
   (add-hook 'org-mode-hook 'org-roam-mode)
   (evil-define-key 'insert org-roam-mode-map (kbd "C-c i") 'org-roam-insert)
 
@@ -559,6 +576,14 @@ before packages are loaded."
       org-format-latex-options (append '(:scale 1.5) org-format-latex-options))
     (org-toggle-pretty-entities))
 
+  (setq org-ref-default-bibliography '("~/nextcloud/references.bib")
+        org-ref-pdf-directory "~/Documents/staging/")
+        ;org-ref-bibliography-notes "~/Papers/notes.org")
+
+  ;; My own functions
+  (spacemacs/set-leader-keys-for-major-mode 'org-mode
+    "iv" 'latex-vectorify)
+  (evil-define-key 'insert org-roam-mode-map (kbd "C-c v") 'latex-vectorify)
 
   (setq-default
    ;; EVIL settings

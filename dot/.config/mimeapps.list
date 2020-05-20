@@ -24,3 +24,5 @@ x-scheme-handler/msteams=teams.desktop
 
 [Added Associations]
 image/gif=sxiv.desktop;
+audio/x-vorbis+ogg=vlc.desktop;
+video/mp4=vlc.desktop;
