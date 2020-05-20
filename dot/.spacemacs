@@ -556,7 +556,7 @@ before packages are loaded."
   (evil-define-key 'insert org-roam-mode-map (kbd "C-c i") 'org-roam-insert)
 
   ;; Org settings
-  (add-to-list 'recentf-exclude "/home/[^/]+/org/.*")
+  (add-to-list 'recentf-exclude "/home/.+/org/.*")
   (with-eval-after-load 'org
     (require 'org-checklist)
     (setq
