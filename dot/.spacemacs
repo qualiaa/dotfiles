@@ -484,6 +484,9 @@ configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
   ; stop custom file
+  (unless (boundp 'recentf-exclude)
+    (setq recentf-exclude '()))
+  (add-to-list 'recentf-exclude "/tmp/garbo.*")
   (setq custom-file (make-temp-file "garbo"))
   (load custom-file)
   )
@@ -553,6 +556,7 @@ before packages are loaded."
   (evil-define-key 'insert org-roam-mode-map (kbd "C-c i") 'org-roam-insert)
 
   ;; Org settings
+  (add-to-list 'recentf-exclude "/home/[^/]+/org/.*")
   (with-eval-after-load 'org
     (require 'org-checklist)
     (setq
