@@ -36,9 +36,14 @@ This function should only modify configuration layer settings."
      ;; Languages
      c-c++
      emacs-lisp
+     lua
+     gpu
      (haskell :variables haskell-completion-backend 'ghci)
      perl5
-     (python :variables python-test-runner 'pytest)
+     (python :variables
+             python-backend 'lsp
+             lsp-server 'pyls
+             python-test-runner 'pytest)
      racket
      shell-scripts
      ;; Data schemas
@@ -51,6 +56,7 @@ This function should only modify configuration layer settings."
      markdown
      org
      deft
+     bibtex
      ;; Development tools
      auto-completion
      cmake
@@ -82,7 +88,8 @@ This function should only modify configuration layer settings."
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages
    '(el-patch
-     (org-roam :location (recipe :fetcher github :repo "jethrokuan/org-roam" :branch "develop")))
+     (org-roam :location (recipe :fetcher github :repo "org-roam/org-roam" :branch "master"))
+     ripgrep)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -476,6 +483,9 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
+  ; stop custom file
+  (setq custom-file (make-temp-file "garbo"))
+  (load custom-file)
   )
 
 (defun dotspacemacs/user-load ()
@@ -484,6 +494,15 @@ This function is called only while dumping Spacemacs configuration. You can
 `require' or `load' the libraries of your choice that will be included in the
 dump."
   )
+
+;;; TODO Move into custom library
+(defun latex-vectorify ()
+  "Format region or read-string as LaTeX vector"
+  (interactive)
+  (let ((text (if (use-region-p)
+                  (delete-and-extract-region (region-beginning) (region-end))
+                (read-string "Vector name: "))))
+    (insert "\\mathbf{" text "}")))
 
 (defun dotspacemacs/user-config ()
   "Configuration for user code:
@@ -509,20 +528,27 @@ before packages are loaded."
   (with-eval-after-load 'deft
     (setq deft-directory "~/org/notes"
           deft-recursive t
-          deft-use-filename-as-title t
+          deft-use-filename-as-title nil
           deft-org-mode-title-prefix t
           deft-markdown-mode-title-level 2))
 
   (require 'org-roam)
   (setq org-roam-directory "~/org/notes"
         org-roam-link-title-format "§%s")
-  (org-roam--build-cache-async)
   (spacemacs/declare-prefix "ar" "org-roam")
-  (spacemacs/set-leader-keys "arr" 'org-roam)
-  (spacemacs/set-leader-keys "art" 'org-roam-today)
-  (spacemacs/set-leader-keys "arf" 'org-roam-find-file)
-  (spacemacs/set-leader-keys "ari" 'org-roam-insert)
-  (spacemacs/set-leader-keys "arg" 'org-roam-show-graph)
+  (spacemacs/set-leader-keys
+    "arr" 'org-roam
+    "art" 'org-roam-dailies-today
+    "arf" 'org-roam-find-file
+    "ari" 'org-roam-insert
+    "arg" 'org-roam-graph)
+  (spacemacs/declare-prefix-for-mode 'org-mode "mr" "org-roam")
+  (spacemacs/set-leader-keys-for-major-mode 'org-mode
+    "rr" 'org-roam
+    "rt" 'org-roam-dailies-today
+    "rf" 'org-roam-find-file
+    "ri" 'org-roam-insert
+    "rg" 'org-roam-graph)
   (add-hook 'org-mode-hook 'org-roam-mode)
   (evil-define-key 'insert org-roam-mode-map (kbd "C-c i") 'org-roam-insert)
 
@@ -530,8 +556,12 @@ before packages are loaded."
   (with-eval-after-load 'org
     (require 'org-checklist)
     (setq
+      ;; TODO settings
+      org-todo-keywords '((sequence "TODO" "DOING" "VERIFY" "|" "DONE"))
+      org-todo-keyword-faces '(("DOING" . "orange") ("VERIFY" . "blue"))
+
       ;; Agenda
-      org-agenda-files (directory-files-recursively "~/org" "\.org$")
+      org-agenda-files (directory-files "~/org" t "^[^.][^#]?.*\.org$")
       org-agenda-dim-blocked-tasks t
       org-agenda-todo-ignore-scheduled 'future
       org-agenda-tags-todo-honor-ignore-options t
@@ -542,6 +572,14 @@ before packages are loaded."
       org-format-latex-options (append '(:scale 1.5) org-format-latex-options))
     (org-toggle-pretty-entities))
 
+  (setq org-ref-default-bibliography '("~/nextcloud/references.bib")
+        org-ref-pdf-directory "~/Documents/staging/")
+        ;org-ref-bibliography-notes "~/Papers/notes.org")
+
+  ;; My own functions
+  (spacemacs/set-leader-keys-for-major-mode 'org-mode
+    "iv" 'latex-vectorify)
+  (evil-define-key 'insert org-roam-mode-map (kbd "C-c v") 'latex-vectorify)
 
   (setq-default
    ;; EVIL settings

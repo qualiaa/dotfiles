@@ -3,17 +3,14 @@ set $audio_player clementine
 
 floating_modifier $mod
 
-mouse_warping none
-#focus_follows_mouse no
-
 ### Appearance
 # Gaps
 gaps inner 20
 
-# font
-# good for high dpi
+# Font
+# (good for high dpi)
 font pango:Noto Mono 8
-# good for low dpi
+# (good for low dpi)
 #font pango:lime 8
 #font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
 
