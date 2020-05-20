@@ -36,11 +36,14 @@ This function should only modify configuration layer settings."
      ;; Languages
      c-c++
      emacs-lisp
-     (haskell :variables haskell-completion-backend 'ghci)
      lua
      gpu
+     (haskell :variables haskell-completion-backend 'ghci)
      perl5
-     (python :variables python-test-runner 'pytest)
+     (python :variables
+             python-backend 'lsp
+             lsp-server 'pyls
+             python-test-runner 'pytest)
      racket
      shell-scripts
      ;; Data schemas
@@ -85,7 +88,8 @@ This function should only modify configuration layer settings."
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages
    '(el-patch
-     (org-roam :location (recipe :fetcher github :repo "org-roam/org-roam" :branch "master")))
+     (org-roam :location (recipe :fetcher github :repo "org-roam/org-roam" :branch "master"))
+     ripgrep)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -479,6 +483,9 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
+  ; stop custom file
+  (setq custom-file (make-temp-file "garbo"))
+  (load custom-file)
   )
 
 (defun dotspacemacs/user-load ()
@@ -534,35 +541,35 @@ before packages are loaded."
     "art" 'org-roam-dailies-today
     "arf" 'org-roam-find-file
     "ari" 'org-roam-insert
-    "arg" 'org-roam-show-graph)
+    "arg" 'org-roam-graph)
   (spacemacs/declare-prefix-for-mode 'org-mode "mr" "org-roam")
   (spacemacs/set-leader-keys-for-major-mode 'org-mode
     "rr" 'org-roam
-    "rt" 'org-roam-today
+    "rt" 'org-roam-dailies-today
     "rf" 'org-roam-find-file
     "ri" 'org-roam-insert
     "rg" 'org-roam-graph)
   (add-hook 'org-mode-hook 'org-roam-mode)
   (evil-define-key 'insert org-roam-mode-map (kbd "C-c i") 'org-roam-insert)
 
-
   ;; Org settings
   (with-eval-after-load 'org
     (require 'org-checklist)
-    (setq ;; TODO settings
-          org-todo-keywords '((sequence "TODO" "DOING" "VERIFY" "|" "DONE"))
-          org-todo-keyword-faces '(("DOING" . "orange") ("VERIFY" . "blue"))
+    (setq
+      ;; TODO settings
+      org-todo-keywords '((sequence "TODO" "DOING" "VERIFY" "|" "DONE"))
+      org-todo-keyword-faces '(("DOING" . "orange") ("VERIFY" . "blue"))
 
-          ;; Agenda
-          org-agenda-files (directory-files-recursively "~/org" "\.org$")
-          org-agenda-dim-blocked-tasks t
-          org-agenda-todo-ignore-scheduled 'future
-          org-agenda-tags-todo-honor-ignore-options t
+      ;; Agenda
+      org-agenda-files (directory-files "~/org" t "^[^.][^#]?.*\.org$")
+      org-agenda-dim-blocked-tasks t
+      org-agenda-todo-ignore-scheduled 'future
+      org-agenda-tags-todo-honor-ignore-options t
 
-          ;; Rendering
-          org-bullets-bullet-list '("○" "◉" "✿" "✸")
-          org-preview-latex-default-process 'dvisvgm
-          org-format-latex-options (append '(:scale 1.5) org-format-latex-options))
+      ;; Rendering
+      org-bullets-bullet-list '("○" "◉" "✿" "✸")
+      org-preview-latex-default-process 'dvisvgm
+      org-format-latex-options (append '(:scale 1.5) org-format-latex-options))
     (org-toggle-pretty-entities))
 
   (setq org-ref-default-bibliography '("~/nextcloud/references.bib")
