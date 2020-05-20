@@ -39,7 +39,10 @@ This function should only modify configuration layer settings."
      gpu
      (haskell :variables haskell-completion-backend 'ghci)
      perl5
-     (python :variables python-test-runner 'pytest)
+     (python :variables
+             python-backend 'lsp
+             lsp-server 'pyls
+             python-test-runner 'pytest)
      racket
      shell-scripts
      ;; Data schemas
@@ -84,7 +87,8 @@ This function should only modify configuration layer settings."
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages
    '(el-patch
-     (org-roam :location (recipe :fetcher github :repo "jethrokuan/org-roam" :branch "develop")))
+     (org-roam :location (recipe :fetcher github :repo "org-roam/org-roam" :branch "master"))
+     ripgrep)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -478,6 +482,9 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
+  ; stop custom file
+  (setq custom-file (make-temp-file "garbo"))
+  (load custom-file)
   )
 
 (defun dotspacemacs/user-load ()
@@ -520,13 +527,13 @@ before packages are loaded."
   (require 'org-roam)
   (setq org-roam-directory "~/org/notes"
         org-roam-link-title-format "§%s")
-  (org-roam--build-cache-async)
+  ;; (org-roam-build-cache)
   (spacemacs/declare-prefix "ar" "org-roam")
   (spacemacs/set-leader-keys "arr" 'org-roam)
   (spacemacs/set-leader-keys "art" 'org-roam-today)
   (spacemacs/set-leader-keys "arf" 'org-roam-find-file)
   (spacemacs/set-leader-keys "ari" 'org-roam-insert)
-  (spacemacs/set-leader-keys "arg" 'org-roam-show-graph)
+  (spacemacs/set-leader-keys "arg" 'org-roam-graph)
   (add-hook 'org-mode-hook 'org-roam-mode)
   (evil-define-key 'insert org-roam-mode-map (kbd "C-c i") 'org-roam-insert)
 
@@ -541,7 +548,7 @@ before packages are loaded."
       org-todo-keyword-faces '(("DOING" . "orange") ("VERIFY" . "blue"))
 
       ;; Agenda
-      org-agenda-files (directory-files-recursively "~/org" "\.org$")
+      org-agenda-files (directory-files "~/org" t "^[^.][^#]?.*\.org$")
       org-agenda-dim-blocked-tasks t
       org-agenda-todo-ignore-scheduled 'future
       org-agenda-tags-todo-honor-ignore-options t

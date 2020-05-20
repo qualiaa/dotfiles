@@ -17,6 +17,7 @@ create_default_packages:
   - mypy
   - autoflake
   - pip
+  - readline
 # pyls-mypy
 # pyls-black
 # pyls-isort

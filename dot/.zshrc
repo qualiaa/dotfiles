@@ -930,11 +930,17 @@ export ZSH=$HOME/.oh-my-zsh
 
 ZSH_THEME="robbyrussell"
 
-plugins=(git
-         ssh-agent
+plugins=(ssh-agent
          zsh-syntax-highlighting
          zsh-autosuggestions
-         zsh-completions)
+         zsh-completions
+         colored-man-pages
+         git
+         cabal
+         stack
+         gcloud
+         aws
+         docker)
 
 # User configuration
 source $HOME/.aliases
