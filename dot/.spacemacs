@@ -565,6 +565,10 @@ before packages are loaded."
           org-format-latex-options (append '(:scale 1.5) org-format-latex-options))
     (org-toggle-pretty-entities))
 
+  (setq org-ref-default-bibliography '("~/nextcloud/references.bib")
+        org-ref-pdf-directory "~/Documents/staging/")
+        ;org-ref-bibliography-notes "~/Papers/notes.org")
+
   ;; My own functions
   (spacemacs/set-leader-keys-for-major-mode 'org-mode
     "iv" 'latex-vectorify)
