@@ -49,6 +49,7 @@ This function should only modify configuration layer settings."
      ;; Data schemas
      csv
      json
+     protobuf
      yaml
      ;; Other configuration
      nginx
