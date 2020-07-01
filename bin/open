@@ -1,0 +1,5 @@
+#!/bin/sh
+
+for x in "$@"; do
+    nohup xdg-open "$x" >$(mktemp) 2>&1 &
+done

@@ -1,0 +1,12 @@
+#!/bin/bash
+# run: dox <file>
+
+pandoc "$1" \
+    -V documentclass=article \
+    -H <(echo "\\usepackage[osf]{mathpazo}
+    \\linespread{1.05}
+    \\usepackage[scaled]{beramono}") \
+    -V numbersections \
+    -V geometry=a4paper,left=1.5in,right=1.5in,top=1in,bottom=2.2in \
+    -V colorlinks \
+    -o "${1%.*}.pdf"

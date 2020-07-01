@@ -1,0 +1,8 @@
+#!/bin/sh
+
+file=$(tempfile -s .png)
+convert -background white -fill blue \
+              -font "Ubuntu" -pointsize 72 \
+              label:"$1" "$file"
+
+exec i3lock -i $file
