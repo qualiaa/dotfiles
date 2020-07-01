@@ -1,0 +1,17 @@
+#!/bin/sh
+
+set -eu
+
+if ! pgrep pulseaudio >/dev/null; then
+    pulseaudio --start
+    sleep 3
+fi
+
+name="HD 4.40BT"
+mac=00:16:94:28:9D:EF
+
+if bluetoothctl <<<"list" | grep -Fq "[$name]"; then
+    echo -e "disconnect\npower off" | bluetoothctl
+else
+    echo -e "disconnect\npower on\nconnect $mac" | bluetoothctl
+fi

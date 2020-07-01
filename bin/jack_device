@@ -1,0 +1,7 @@
+#!/usr/bin/sh
+
+set -x
+
+device=$(grep "$1" /proc/asound/cards | cut -c2 | sed '/^ *$/d')
+
+jack_control dps device hw:$device
