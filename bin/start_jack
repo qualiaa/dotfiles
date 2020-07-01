@@ -1,0 +1,17 @@
+#!/bin/bash
+
+
+jack_control eps realtime true
+jack_control ds alsa
+jack_control dps device hw:0
+jack_control dps rate 44100
+jack_control dps nperiods 2
+jack_control dps period 512
+jack_control start
+
+
+# a2jmidid -e &
+# patchage  &
+# zynaddsubfx  &
+# qsampler &
+

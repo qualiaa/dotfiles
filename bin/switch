@@ -1,0 +1,15 @@
+#!/usr/bin/env sh
+
+set -eu
+
+readonly colorscheme_file="$HOME/.Xresources.d/solarized"
+
+sed -i '
+    /^#include/s/solarized-dark/solarized-light/
+    t
+    /^#include/s/solarized-light/solarized-dark/
+    ' "$colorscheme_file"
+
+xrdb -merge "$colorscheme_file"
+
+killall -SIGUSR1 urxvt
