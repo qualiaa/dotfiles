@@ -1,0 +1,38 @@
+#!/bin/sh
+
+set -eu
+
+readonly colorscheme_file="$HOME/.Xresources.d/solarized"
+
+update_terminal() {
+    xrdb -merge "$colorscheme_file"
+    pkill -SIGUSR1 urxvt
+    if command -v i3-msg >/dev/null 2>&1; then
+        i3-msg reload >/dev/null 2>&1
+    fi
+}
+
+set_theme() {
+    mode="$1"
+    sed -Ei "/^#include/s/solarized-(light|dark)/solarized-$mode/" "$colorscheme_file"
+    ln -sf "$HOME/.dircolors.ansi-$mode" ~/.dircolors
+    update_terminal
+}
+
+current_setting() {
+    sed -nE '/^#include "solarized/p' "$colorscheme_file" | grep -oE "(light|dark)"
+}
+
+next_setting() {
+    current_setting | sed 's/light/X/;s/dark/light/;s/X/dark/'
+}
+
+switch() {
+    case "$1" in
+        light|dark) set_theme "$1" ;;
+        toggle) switch $(next_setting) ;;
+        *) echo "Invalid current theme"; exit 1
+    esac
+}
+
+switch "${1:-toggle}"
