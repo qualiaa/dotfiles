@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+while :; do
+    ip addr show |\
+        awk '/inet.*dynamic.*enp0s25/{print $2}' |\
+        sed 's+/.*$++' |\
+        ssh love 'cat - > laptop_ip'
+    sleep 60
+done

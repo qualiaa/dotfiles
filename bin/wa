@@ -1,0 +1,3 @@
+#!/usr/bin/sh
+
+exec webapp https://web.whatsapp.com/

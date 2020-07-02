@@ -7,6 +7,6 @@ dot/.config/*
 !dot/.config/sublime-text-3
 !dot/.config/mimeapps.list
 
-dot/.vim/bundle/*
+*/.vim/bundle/*
 !dot/.vim/bundle/Vundle.vim
-.ghc/ghci_history
+*/.ghc/ghci_history

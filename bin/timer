@@ -1,0 +1,131 @@
+#!/usr/bin/env python3
+
+import datetime
+import time
+import sys
+import os
+import os.path as path
+from pathlib import Path
+
+XDG_DATA_HOME = os.getenv("XDG_DATA_HOME",
+        default=path.join(os.getenv("HOME"),".local/share"))
+TIMER_DIR  = Path(XDG_DATA_HOME,"timers")
+ACTIVE_DIR = Path(TIMER_DIR,"active")
+
+FILE_WRITE_PERIOD = 10 #seconds
+
+
+
+
+def log(*args,**kargs):
+    print(*args,**kargs,file=sys.stderr)
+
+def _read_timer(timer_path):
+    with open(timer_path) as timer_file:
+        return float(timer_file.readline())
+        
+
+def _print_timer(duration):
+    sys.stdout.write("\r{}".format(
+        datetime.timedelta(seconds=duration)))
+
+def _write_timer(timer_path,duration):
+    with open(timer_path,'w') as timer_file:
+        print(duration,file=timer_file)
+
+
+
+
+def start_timer(timer_name=None,timer_path=None):
+    start_time = time.time()
+    last_file_write = start_time
+
+    if timer_path:
+        TIMER_DIR.mkdir(exist_ok=True)
+
+        if os.access(timer_path, os.R_OK):
+            start_time -= _read_timer(timer_path)
+
+    try:
+        while True:
+            current_time = time.time()
+            duration = current_time - start_time
+
+            if sys.stdout and not sys.stdout.closed:
+                _print_timer(duration)
+
+            if timer_path and current_time - last_file_write >= FILE_WRITE_PERIOD:
+                _write_timer(timer_path, duration)
+                last_file_write=current_time
+                
+            time.sleep(0.05)
+
+    except KeyboardInterrupt:
+        if timer_path:
+            _write_timer(timer_path, duration)
+        print()
+        sys.exit()
+
+def stop_timer(timer_name,timer_path):
+    pass
+
+# TODO: should take list of timers
+def delete_timer(timer_name,timer_path):
+    if not os.access(timer_path,os.W_OK):
+        log("No such timer {}".format(timer_name))
+        exit(1)
+
+    os.remove(timer_path)
+
+def query_timer(timer_name,timer_path):
+    try:
+        duration = _read_timer(timer_path)
+    except FileNotFoundError:
+        log("No such timer `{}'".format(timer_name))
+        sys.exit(1)
+
+    _print_timer(duration)
+    print()
+
+def list_timers():
+    for f in os.listdir(TIMER_DIR):
+        print(f)
+
+
+
+
+modes = {
+    "start":  start_timer,
+    #"restart":  restart_timer,
+    "stop":   stop_timer,
+    "delete": delete_timer,
+    "query":  query_timer,
+    "list":   list_timers
+}
+
+def main():
+    if len(sys.argv) > 1:
+        args = iter(sys.argv[1:])
+        mode = next(args)
+        if mode in modes.keys():
+            if mode not in ("list"):
+                try:
+                    timer_name = next(args)
+                    timer_path = path.join(TIMER_DIR,timer_name)
+                except StopIteration:
+                    log("{} requires a timer name".format(mode))
+                    log("Try start to create a new timer")
+                    log("or list for a list of existing timers")
+                    sys.exit(1)
+                modes[mode](timer_name,timer_path)
+            else:
+                modes[mode]()
+        else:
+            log("Invalid mode. Valid options are:")
+            log(*modes,sep=' | ')
+            sys.exit(1)
+    else:
+        start_timer()
+
+if __name__=="__main__":
+    main()
