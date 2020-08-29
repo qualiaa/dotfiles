@@ -1,3 +1,7 @@
+command-exists() {
+    command -v "$1" >/dev/null
+}
+
 alias zz='source $ZSHRC'
 alias zshrc='vim $ZSHRC; zz'
 alias setbg='feh --bg-fill'
@@ -7,7 +11,7 @@ alias bell='echo -ne "\a"'
 exec 3>&1 >/dev/null
 
 # Docker aliases
-if command -v docker 2>/dev/null; then
+if command-exists docker; then
     alias dat='docker attach'
     alias dcom='docker commit'
     alias dt='docker tag'
@@ -37,11 +41,11 @@ if command -v docker 2>/dev/null; then
 fi
 
 
-command -v jack_control && alias jack='jack_control'
-command -v bluetoothctl && alias bluez="bluetoothctl"
+command-exists jack_control && alias jack='jack_control'
+command-exists bluetoothctl && alias bluez="bluetoothctl"
 
 # Haxe convenience aliases
-if command -v haxelib; then
+if command-exists haxelib; then
     alias lime='haxelib run lime'
     alias flixel='haxelib run flixel-tools'
 fi
@@ -50,7 +54,7 @@ fi
 [ -n $IDF_PATH ] && alias idf='idf.py'
 
 # Haskell Stack convenience aliases
-if command -v stack; then
+if command-exists stack; then
     alias ghc='stack ghc --'
     alias ghci='stack ghci'
     alias runghc='stack runghc'
@@ -64,7 +68,7 @@ if [ -f /etc/debian_version ]; then
     alias pinstall='sudo apt install'
     alias psearch='apt search'
     alias puninstall='sudo apt remove'
-elif command -v yay; then
+elif command-exists yay; then
     alias pupdate='yay -Syu'
     alias pinstall='yay -S'
     alias psearch='yay -Ss'
