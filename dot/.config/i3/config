@@ -3,6 +3,15 @@ set $audio_player clementine
 
 floating_modifier $mod
 
+
+# Screen Settings
+#< DO NOT EDIT THIS SECTION
+workspace 8:www output DP1
+workspace 9:comms output DP1
+workspace 10:music output DP1
+#>
+
+
 ### Appearance
 # Gaps
 gaps inner 20
@@ -22,7 +31,7 @@ client.urgent           #CC0000 #CC0000 #ffffff #900000   #900000
 
 ### Program Settings
 # program settings
-assign [class="Firefox"] 1:www
+assign [class="Firefox"] 8:www
 assign [class="Skype"] 9:comms
 assign [class="Slack"] 9:comms
 assign [class="discord"] 9:comms
@@ -50,7 +59,7 @@ for_window [title="amsynth"] floating enable, border none
 
 # Start shortcuts
 bindsym $mod+Return exec i3-sensible-terminal
-bindsym $mod+Control+Return exec "i3-msg \\"exec firefox; workspace 1:www\\""
+bindsym $mod+Control+Return exec "i3-msg \\"exec firefox; workspace 8:www\\""
 
 
 ### Navigation
@@ -114,32 +123,29 @@ bindsym $mod+space focus mode_toggle
 ### Workspace Settings
 
 # Navigation
-bindsym $mod+1 workspace 1:www
+bindsym $mod+1 workspace 1
 bindsym $mod+2 workspace 2
 bindsym $mod+3 workspace 3
 bindsym $mod+4 workspace 4
 bindsym $mod+5 workspace 5
 bindsym $mod+6 workspace 6
 bindsym $mod+7 workspace 7
-bindsym $mod+8 workspace 8
+bindsym $mod+8 workspace 8:www
 bindsym $mod+9 workspace 9:comms
 bindsym $mod+0 workspace 10:music
-bindsym $mod+Shift+1 move container to workspace 1:www
+bindsym $mod+Shift+1 move container to workspace 1
 bindsym $mod+Shift+2 move container to workspace 2
 bindsym $mod+Shift+3 move container to workspace 3
 bindsym $mod+Shift+4 move container to workspace 4
 bindsym $mod+Shift+5 move container to workspace 5
 bindsym $mod+Shift+6 move container to workspace 6
 bindsym $mod+Shift+7 move container to workspace 7
-bindsym $mod+Shift+8 move container to workspace 8
+bindsym $mod+Shift+8 move container to workspace 8:www
 bindsym $mod+Shift+9 move container to workspace 9:comms
 bindsym $mod+Shift+0 move container to workspace 10:music
 
-# Screen Settings
-workspace 1:www output primary
-workspace 10:music output primary
-
 # reload the configuration file
+bindsym $mod+Shift+m exec update-monitors
 bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
@@ -180,7 +186,6 @@ set_from_resource $c4 i3wm.color4 #FFFFFF
 set_from_resource $c5 i3wm.color5 #FFFFFF
 set_from_resource $c6 i3wm.color6 #FFFFFF
 set_from_resource $c7 i3wm.color7 #FFFFFF
-
 set_from_resource $c8 i3wm.color8 #FFFFFF
 set_from_resource $c9 i3wm.color9 #FFFFFF
 set_from_resource $c10 i3wm.color10 #FFFFFF
