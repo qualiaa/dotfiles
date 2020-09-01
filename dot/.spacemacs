@@ -515,19 +515,10 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
-
   ;; General coding settings
-  (setq code-modes '(c-c++-mode-hooks
-                     python-mode-hook
-                     haskell-mode-hook
-                     racket-mode-hook
-                     shell-mode-hook))
-  (mapc (function (lambda (x) (add-hook x 'spacemacs/toggle-fill-column-indicator-on)))
-       (append code-modes '(markdown-mode-hook org-mode-hook)))
-
-  ;; Disable ' and " matching
-  ;(sp-pair "'" nil :actions :rem)
-  ;(sp-pair "\"" nil :actions :rem)
+  (remove-hook 'prog-mode-hook #'smartparens-mode)
+  (map (lambda (x) (add-hook x 'spacemacs/toggle-fill-column-indicator-on))
+       '(prog-mode-hook markdown-mode-hook org-mode-hook))
 
   ;; Deft settings
   (with-eval-after-load 'deft
