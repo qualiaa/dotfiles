@@ -1,0 +1,55 @@
+#!/bin/bash
+
+readonly I3_CONFIG="$HOME/.config/i3/config"
+
+i3-settings() {
+    tmp=$(mktemp)
+    cat <(sed '/#</q' "$I3_CONFIG") - <(sed -n '/#>/,$p' "$I3_CONFIG") >"$tmp"
+    mv "$tmp" "$I3_CONFIG"
+}
+
+readonly connected=$(xrandr --current | grep " connected" | cut -d' ' -f1)
+
+have() {
+    grep -q "^$1$" <<<"$connected"
+}
+
+if have DP1 && have HDMI2; then
+    # Hack to fix broken DisplayPort on my machine...
+    xrandr --output DP1 --off
+    sleep 2
+
+    xrandr \
+        --output eDP1 --off \
+        --output HDMI2 --auto --primary \
+        --output DP1 --auto --right-of HDMI2
+
+    i3-settings <<EOF
+workspace 8:www output DP1
+workspace 9:comms output DP1
+workspace 10:music output DP1
+EOF
+elif have HDMI2; then
+    xrandr \
+        --output eDP1 --auto --primary \
+        --output HDMI2 --auto --right-of eDP1 \
+        --output DP1 --off
+    i3-settings <<EOF
+workspace 8:www output primary
+workspace 9:comms output primary
+workspace 10:music output primary
+EOF
+else
+    xrandr \
+        --output eDP1 --auto --primary \
+        --output HDMI2 --off \
+        --output DP1 --off
+    i3-settings <<EOF
+workspace 8:www output primary
+workspace 9:comms output primary
+workspace 10:music output primary
+EOF
+fi
+
+# Reload i3 if already started
+{ pgrep -x i3 && i3-msg reload ; } >/dev/null 
