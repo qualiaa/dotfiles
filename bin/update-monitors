@@ -1,8 +1,8 @@
 #!/bin/bash
 
-BUILTIN=eDP1
-DP=DP1
-HDMI=HDMI2
+BUILTIN=eDP-1-1
+DP=DP-1-1
+HDMI=HDMI-1-1
 
 
 readonly I3_CONFIG="$HOME/.config/i3/config"
