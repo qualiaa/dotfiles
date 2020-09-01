@@ -89,6 +89,7 @@ This function should only modify configuration layer settings."
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages
    '(el-patch
+     bnf-mode
      (org-roam :location (recipe :fetcher github :repo "org-roam/org-roam" :branch "master"))
      ripgrep)
 
