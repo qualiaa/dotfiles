@@ -515,10 +515,13 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
+  ;; Emacs window titles
+  (setq-default frame-title-format '("%f [%m]"))
   ;; General coding settings
   (remove-hook 'prog-mode-hook #'smartparens-mode)
   (map (lambda (x) (add-hook x 'spacemacs/toggle-fill-column-indicator-on))
        '(prog-mode-hook markdown-mode-hook org-mode-hook))
+  ;(spacemacs/toggle-smartparens-globally-off)
 
   ;; Deft settings
   (with-eval-after-load 'deft
@@ -546,6 +549,7 @@ before packages are loaded."
     "ri" 'org-roam-insert
     "rg" 'org-roam-graph)
   (add-hook 'org-mode-hook 'org-roam-mode)
+  (add-hook 'org-mode-hook 'spacemacs/toggle-auto-fill-mode-on)
   (evil-define-key 'insert org-roam-mode-map (kbd "C-c i") 'org-roam-insert)
 
   ;; Org settings
