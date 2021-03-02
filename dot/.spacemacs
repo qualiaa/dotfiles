@@ -55,7 +55,8 @@ This function should only modify configuration layer settings."
      nginx
      ;; Text editing and note taking
      markdown
-     org
+     (org :variables
+          org-enable-roam-support t)
      deft
      bibtex
      ;; Development tools
@@ -88,9 +89,7 @@ This function should only modify configuration layer settings."
    ;; '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages
-   '(el-patch
-     bnf-mode
-     (org-roam :location (recipe :fetcher github :repo "org-roam/org-roam" :branch "master"))
+   '(bnf-mode
      ripgrep)
 
    ;; A list of packages that cannot be updated.
@@ -531,7 +530,6 @@ before packages are loaded."
           deft-org-mode-title-prefix t
           deft-markdown-mode-title-level 2))
 
-  (require 'org-roam)
   (setq org-roam-directory "~/org/notes"
         org-roam-link-title-format "§%s")
   (spacemacs/declare-prefix "ar" "org-roam")
