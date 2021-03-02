@@ -3,22 +3,23 @@ channels:
   - conda-forge
   - defaults
 create_default_packages:
+  - pytest
   - hypothesis
   - tox
   - pylint
   - flake8
   - ipython
   - ptvsd>=4.2
-  - pytest
   - epc
   - python-language-server[all]
   - black
   - isort
-  - mypy
   - autoflake
-  - pip
   - readline
-# pyls-mypy
-# pyls-black
-# pyls-isort
-# importmagic
+  - pip
+#  - pip:
+#    - pytest-cov
+#    - pyls-mypy
+#    - pyls-black
+#    - pyls-isort
+#    - importmagic

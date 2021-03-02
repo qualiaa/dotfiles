@@ -1,0 +1,8 @@
+-r requirements.txt
+pylint
+flake8
+pytest
+pytest-cov
+pytest-redis
+tox
+hypothesis

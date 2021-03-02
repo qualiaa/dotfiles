@@ -1,0 +1,7 @@
+name: dynium-{{cookiecutter.project_name}}
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python>=3.7
+  - numpy

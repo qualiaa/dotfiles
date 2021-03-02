@@ -1,0 +1,17 @@
+.mypy_cache
+
+# Build artifacts
+build/
+dist/
+*.egg-info
+__pycache__
+
+# Editor backups
+*.sw?
+.#*
+
+# Testing artifacts
+.tox
+.coverage
+.hypothesis
+.pytest_cache

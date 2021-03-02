@@ -1,0 +1,9 @@
+{
+    "project_name": "Name for this project (not the package name!)",
+    "package_name": "{{cookiecutter.project_name}}",
+    "root_folder": "dynium-{{cookiecutter.project_name}}",
+    "project_description": "Project description",
+    "git_slug": "For example, jamie/project.git",
+    "author": "Jamie Bayne",
+    "email": "jamie@dynium.ai"
+}
