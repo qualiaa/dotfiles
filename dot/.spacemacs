@@ -36,6 +36,7 @@ This function should only modify configuration layer settings."
      ;; Languages
      c-c++
      emacs-lisp
+     go
      lua
      gpu
      (haskell :variables haskell-completion-backend 'ghci)
