@@ -949,6 +949,9 @@ _fzf_compgen_dir() {
 
 ZSH_THEME="robbyrussell"
 
+zstyle :omz:plugins:ssh-agent identities $(
+grep -Rl -- "^-----BEGIN RSA PRIVATE KEY-----$" ~/.ssh  | xargs -n1 basename | tr '\n' ' ')
+
 plugins=(ssh-agent
          zsh-syntax-highlighting
          zsh-autosuggestions
