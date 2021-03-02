@@ -928,13 +928,34 @@
 #
 export ZSH=$HOME/.oh-my-zsh
 
+fzf_ignore_list=(Remote Datasets .oh-my-zsh .nv .mozilla .cache .git '.mypy*' .hg .svn .ssh '.pylint*' .miniconda3)
+fzf_rg_ignore_flags=$(printf -- "-g '!%s' " ${fzf_ignore_list[@]})
+fzf_fd_ignore_flags=$(printf -- "-E '%s' " ${fzf_ignore_list[@]})
+
+export FZF_BASE=$HOME/.fzf
+export FZF_COMPLETION_TRIGGER='~~'
+export FZF_DEFAULT_OPTS="--cycle --keep-right"
+export FZF_DEFAULT_COMMAND="rg --follow --hidden --files $fzf_rg_ignore_flags ~ 2>/dev/null"
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_ALT_C_COMMAND="fd --follow --hidden --type d $fzf_fd_ignore_flags 2>/dev/null"
+#export FZF_ALT_C_COMMAND="rg --files --hidden $fzf_rg_ignore_flags --null ~/ 2> /dev/null | xargs -0 dirname | awk '!x[\$0]++'"
+_fzf_compgen_path() {
+    rg --follow --hidden --files $=fzf_rg_ignore_flags -g "\!$1" "$1" 2>/dev/null
+}
+
+_fzf_compgen_dir() {
+    fd --follow --hidden --type d $=fzf_fd_ignore_flags -E "$1" $1 2>/dev/null
+}
+
 ZSH_THEME="robbyrussell"
 
 plugins=(ssh-agent
          zsh-syntax-highlighting
          zsh-autosuggestions
          zsh-completions
+         colorize
          colored-man-pages
+         fzf
          git
          cabal
          stack
