@@ -1,0 +1,27 @@
+default:
+  before_script:
+    # Run build and install requirements from setup.py
+    - "pip install -e '.[test]'"
+
+stages:
+  - code-quality
+  - test
+
+pylint:
+  tags: [python]
+  stage: code-quality
+  script:
+    - pylint --disable=R,C {{cookiecutter.package_name}}/**/*.py || code=$?
+    - '[ 0 -eq $(( code & 3 )) ]'
+
+flake8:
+  tags: [python]
+  stage: code-quality
+  script:
+    flake8
+  allow_failure: true
+
+pytest:
+  tags: [python]
+  stage: test
+  script: tox
