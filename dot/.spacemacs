@@ -38,7 +38,7 @@ This function should only modify configuration layer settings."
      emacs-lisp
      lua
      gpu
-     (haskell :variables haskell-completion-backend 'ghci)
+     (haskell :variables haskell-completion-backend 'lsp)
      perl5
      (python :variables
              python-backend 'lsp
