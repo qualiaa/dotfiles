@@ -1,5 +1,10 @@
 #!/bin/bash
 
+BUILTIN=eDP1
+DP=DP1
+HDMI=HDMI2
+
+
 readonly I3_CONFIG="$HOME/.config/i3/config"
 
 i3-settings() {
@@ -14,36 +19,36 @@ have() {
     grep -q "^$1$" <<<"$connected"
 }
 
-if have DP1 && have HDMI2; then
+if have $DP && have $HDMI; then
     # Hack to fix broken DisplayPort on my machine...
-    xrandr --output DP1 --off
+    xrandr --output $DP --off
     sleep 2
 
     xrandr \
-        --output eDP1 --off \
-        --output HDMI2 --auto --primary \
-        --output DP1 --auto --right-of HDMI2
+        --output $BUILTIN --off \
+        --output $HDMI --auto --primary \
+        --output $DP --auto --right-of $HDMI
 
     i3-settings <<EOF
-workspace 8:www output DP1
-workspace 9:comms output DP1
-workspace 10:music output DP1
+workspace 8:www output $DP
+workspace 9:comms output $DP
+workspace 10:music output $DP
 EOF
-elif have HDMI2; then
+elif have $HDMI; then
     xrandr \
-        --output eDP1 --auto --primary \
-        --output HDMI2 --auto --right-of eDP1 \
-        --output DP1 --off
+        --output $BUILTIN --auto \
+        --output $HDMI --auto --primary --right-of $BUILTIN \
+        --output $DP --off
     i3-settings <<EOF
-workspace 8:www output primary
-workspace 9:comms output primary
-workspace 10:music output primary
+workspace 8:www output $BUILTIN
+workspace 9:comms output $BUILTIN
+workspace 10:music output $BUILTIN
 EOF
 else
     xrandr \
-        --output eDP1 --auto --primary \
-        --output HDMI2 --off \
-        --output DP1 --off
+        --output $BUILTIN --auto --primary \
+        --output $HDMI --off \
+        --output $DP --off
     i3-settings <<EOF
 workspace 8:www output primary
 workspace 9:comms output primary

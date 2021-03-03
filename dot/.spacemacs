@@ -38,7 +38,7 @@ This function should only modify configuration layer settings."
      emacs-lisp
      lua
      gpu
-     (haskell :variables haskell-completion-backend 'ghci)
+     (haskell :variables haskell-completion-backend 'lsp)
      perl5
      (python :variables
              python-backend 'lsp
@@ -55,7 +55,8 @@ This function should only modify configuration layer settings."
      nginx
      ;; Text editing and note taking
      markdown
-     org
+     (org :variables
+          org-enable-roam-support t)
      deft
      bibtex
      ;; Development tools
@@ -88,8 +89,7 @@ This function should only modify configuration layer settings."
    ;; '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages
-   '(el-patch
-     (org-roam :location (recipe :fetcher github :repo "org-roam/org-roam" :branch "master"))
+   '(bnf-mode
      ripgrep)
 
    ;; A list of packages that cannot be updated.
@@ -130,9 +130,9 @@ It should only modify the values of Spacemacs settings."
    ;; portable dumper in the cache directory under dumps sub-directory.
    ;; To load it when starting Emacs add the parameter `--dump-file'
    ;; when invoking Emacs 27.1 executable on the command line, for instance:
-   ;;   ./emacs --dump-file=~/.emacs.d/.cache/dumps/spacemacs.pdmp
-   ;; (default spacemacs.pdmp)
-   dotspacemacs-emacs-dumper-dump-file "spacemacs.pdmp"
+   ;;   ./emacs --dump-file=$HOME/.emacs.d/.cache/dumps/spacemacs-27.1.pdmp
+   ;; (default (format "spacemacs-%s.pdmp" emacs-version))
+   dotspacemacs-emacs-dumper-dump-file (format "spacemacs-%s.pdmp" emacs-version)
 
    ;; If non-nil ELPA repositories are contacted via HTTPS whenever it's
    ;; possible. Set it to nil if you have no way to use HTTPS in your
@@ -152,9 +152,18 @@ It should only modify the values of Spacemacs settings."
    ;; (default '(100000000 0.1))
    dotspacemacs-gc-cons '(100000000 0.1)
 
+   ;; Set `read-process-output-max' when startup finishes.
+   ;; This defines how much data is read from a foreign process.
+   ;; Setting this >= 1 MB should increase performance for lsp servers
+   ;; in emacs 27.
+   ;; (default (* 1024 1024))
+   dotspacemacs-read-process-output-max (* 1024 1024)
+
    ;; If non-nil then Spacelpa repository is the primary source to install
    ;; a locked version of packages. If nil then Spacemacs will install the
-   ;; latest version of packages from MELPA. (default nil)
+   ;; latest version of packages from MELPA. Spacelpa is currently in
+   ;; experimental state please use only for testing purposes.
+   ;; (default nil)
    dotspacemacs-use-spacelpa nil
 
    ;; If non-nil then verify the signature for downloaded Spacelpa archives.
@@ -179,6 +188,11 @@ It should only modify the values of Spacemacs settings."
    ;; section of the documentation for details on available variables.
    ;; (default 'vim)
    dotspacemacs-editing-style 'vim
+
+   ;; If non-nil show the version string in the Spacemacs buffer. It will
+   ;; appear as (spacemacs version)@(emacs version)
+   ;; (default t)
+   dotspacemacs-startup-buffer-show-version t
 
    ;; Specify the startup banner. Default value is `official', it displays
    ;; the official spacemacs logo. An integer value is the index of text
@@ -207,6 +221,14 @@ It should only modify the values of Spacemacs settings."
 
    ;; Default major mode of the scratch buffer (default `text-mode')
    dotspacemacs-scratch-mode 'text-mode
+
+   ;; If non-nil, *scratch* buffer will be persistent. Things you write down in
+   ;; *scratch* buffer will be saved and restored automatically.
+   dotspacemacs-scratch-buffer-persistent nil
+
+   ;; If non-nil, `kill-buffer' on *scratch* buffer
+   ;; will bury it instead of killing.
+   dotspacemacs-scratch-buffer-unkillable nil
 
    ;; Initial message in the scratch buffer, such as "Welcome to Spacemacs!"
    ;; (default nil)
@@ -256,8 +278,10 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-major-mode-leader-key ","
 
    ;; Major mode leader key accessible in `emacs state' and `insert state'.
-   ;; (default "C-M-m")
-   dotspacemacs-major-mode-emacs-leader-key "C-M-m"
+   ;; (default "C-M-m" for terminal mode, "<M-return>" for GUI mode).
+   ;; Thus M-RET should work as leader key in both GUI and terminal modes.
+   ;; C-M-m also should work in terminal mode, but not in GUI mode.
+   dotspacemacs-major-mode-emacs-leader-key (if window-system "<M-return>" "C-M-m")
 
    ;; These variables control whether separate commands are bound in the GUI to
    ;; the key pairs `C-i', `TAB' and `C-m', `RET'.
@@ -393,7 +417,7 @@ It should only modify the values of Spacemacs settings."
                                                    pdf-view-mode
                                                    text-mode)
 
-   ;; Code folding method. Possible values are `evil' and `origami'.
+   ;; Code folding method. Possible values are `evil', `origami' and `vimish'.
    ;; (default 'evil)
    dotspacemacs-folding-method 'evil
 
@@ -461,6 +485,20 @@ It should only modify the values of Spacemacs settings."
    ;; (default nil)
    dotspacemacs-whitespace-cleanup nil
 
+   ;; If non nil activate `clean-aindent-mode' which tries to correct
+   ;; virtual indentation of simple modes. This can interfer with mode specific
+   ;; indent handling like has been reported for `go-mode'.
+   ;; If it does deactivate it here.
+   ;; (default t)
+   dotspacemacs-use-clean-aindent-mode t
+
+   ;; If non-nil shift your number row to match the entered keyboard layout
+   ;; (only in insert state). Currently supported keyboard layouts are:
+   ;; `qwerty-us', `qwertz-de' and `querty-ca-fr'.
+   ;; New layouts can be added in `spacemacs-editing' layer.
+   ;; (default nil)
+   dotspacemacs-swap-number-row nil
+
    ;; Either nil or a number of seconds. If non-nil zone out after the specified
    ;; number of seconds. (default nil)
    dotspacemacs-zone-out-when-idle nil
@@ -468,7 +506,11 @@ It should only modify the values of Spacemacs settings."
    ;; Run `spacemacs/prettify-org-buffer' when
    ;; visiting README.org files of Spacemacs.
    ;; (default nil)
-   dotspacemacs-pretty-docs nil))
+   dotspacemacs-pretty-docs nil
+
+   ;; If nil the home buffer shows the full path of agenda items
+   ;; and todos. If non nil only the file name is shown.
+   dotspacemacs-home-shorten-agenda-source nil))
 
 (defun dotspacemacs/user-env ()
   "Environment variables setup.
@@ -517,14 +559,10 @@ before packages are loaded."
   ;; Emacs window titles
   (setq-default frame-title-format '("%f [%m]"))
   ;; General coding settings
-  (setq code-modes '(c-c++-mode-hooks
-                     python-mode-hook
-                     haskell-mode-hook
-                     racket-mode-hook
-                     shell-mode-hook))
-  (mapc (function (lambda (x) (add-hook x 'spacemacs/toggle-fill-column-indicator-on)))
-       (append code-modes '(markdown-mode-hook org-mode-hook)))
-  (spacemacs/toggle-smartparens-globally-off)
+  (remove-hook 'prog-mode-hook #'smartparens-mode)
+  (mapc (lambda (x) (add-hook x 'spacemacs/toggle-fill-column-indicator-on))
+        '(prog-mode-hook markdown-mode-hook org-mode-hook))
+  ;(spacemacs/toggle-smartparens-globally-off)
 
   ;; Deft settings
   (with-eval-after-load 'deft
@@ -534,7 +572,6 @@ before packages are loaded."
           deft-org-mode-title-prefix t
           deft-markdown-mode-title-level 2))
 
-  (require 'org-roam)
   (setq org-roam-directory "~/org/notes"
         org-roam-link-title-format "§%s")
   (spacemacs/declare-prefix "ar" "org-roam")
@@ -579,6 +616,22 @@ before packages are loaded."
   (setq org-ref-default-bibliography '("~/nextcloud/references.bib")
         org-ref-pdf-directory "~/Documents/staging/")
         ;org-ref-bibliography-notes "~/Papers/notes.org")
+
+  ; Add org-babel settings
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (org . t)
+     (lilypond . t)))
+  (add-to-list 'org-babel-default-header-args:lilypond-user
+               '(:prologue . "\\paper{
+     indent=0\\mm
+     line-width=200\\mm
+     oddFooterMarkup=##f
+     oddHeaderMarkup=##f
+     bookTitleMarkup = ##f
+     scoreTitleMarkup = ##f
+     }"))
 
   ;; My own functions
   (spacemacs/set-leader-keys-for-major-mode 'org-mode

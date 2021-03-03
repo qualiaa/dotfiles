@@ -1,0 +1,24 @@
+name: {{cookiecutter.project_name}}
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python>=3.7
+  - numpy
+
+  # Test dependencies
+  - pytest
+  - hypothesis
+  - tox
+  - pylint
+  - flake8
+  - pip
+  - pip:
+      - pytest-cov
+
+  # Dev toopls
+  - isort
+  - black
+  - ipython
+  - python-language-server
+  - ptvsd
