@@ -564,15 +564,8 @@ before packages are loaded."
         '(prog-mode-hook markdown-mode-hook org-mode-hook))
   ;(spacemacs/toggle-smartparens-globally-off)
 
-  ;; Deft settings
-  (with-eval-after-load 'deft
-    (setq deft-directory "~/org/notes"
-          deft-recursive t
-          deft-use-filename-as-title nil
-          deft-org-mode-title-prefix t
-          deft-markdown-mode-title-level 2))
-
   (setq org-roam-directory "~/org/notes"
+        org-roam-db-location "~/.org-roam.db"
         org-roam-link-title-format "§%s")
   (spacemacs/declare-prefix "ar" "org-roam")
   (spacemacs/set-leader-keys
@@ -591,6 +584,37 @@ before packages are loaded."
   (add-hook 'org-mode-hook 'org-roam-mode)
   (add-hook 'org-mode-hook 'spacemacs/toggle-auto-fill-mode-on)
   (evil-define-key 'insert org-roam-mode-map (kbd "C-c i") 'org-roam-insert)
+
+  ;; Org-roam capture templates
+  (setq org-roam-capture-templates
+        '(("d" "default" plain (function org-roam--capture-get-point)
+           "\nTags :: %?"
+           :file-name "%<%Y%m%d%H%M%S>-${slug}"
+           :head "#+title: ${title}\n"
+           :unnarrowed t)
+          ("p" "private" plain (function org-roam--capture-get-point)
+           "\nTags :: %?"
+           :file-name "private/%<%Y%m%d%H%M%S>-${slug}"
+           :head "#+title: ${title}\n"
+           :unnarrowed t)
+          ("s" "source" plain (function org-roam--capture-get-point)
+           "\nAuthor :: %?\nTitle :: \nURL :: \nTags :: "
+           :file-name "%<%Y%m%d%H%M%S>-${slug}"
+           :head "#+title: ${title}\n"
+           :unnarrowed t)
+          ("r" "recipe" plain (function org-roam--capture-get-point)
+           "\nTags :: [[file:20210303214935-recipes.org][§recipes]] %?\nSource :: \nCourses :: \n\n* Ingredients\n\n - \n\n* Tools\n\n - \n\n* Instructions\n\n"
+           :file-name "%<%Y%m%d%H%M%S>-${slug}"
+           :head "#+title: ${title}\n"
+           :unnarrowed t)))
+
+  ;; Deft settings
+  (with-eval-after-load 'deft
+    (setq deft-directory org-roam-directory
+          deft-recursive t
+          deft-use-filename-as-title nil
+          deft-org-mode-title-prefix t
+          deft-markdown-mode-title-level 2))
 
   ;; Org settings
   (add-to-list 'recentf-exclude "/home/.+/org/.*")
@@ -613,7 +637,9 @@ before packages are loaded."
       org-format-latex-options (append '(:scale 1.5) org-format-latex-options))
     (org-toggle-pretty-entities))
 
-  (setq org-ref-default-bibliography '("~/nextcloud/references.bib")
+  (setq reftex-default-bibliography
+        (concat (file-name-as-directory org-roam-directory) "references.bib"))
+  (setq org-ref-default-bibliography reftex-default-bibliography
         org-ref-pdf-directory "~/Documents/staging/")
         ;org-ref-bibliography-notes "~/Papers/notes.org")
 
