@@ -637,11 +637,12 @@ before packages are loaded."
       org-format-latex-options (append '(:scale 1.5) org-format-latex-options))
     (org-toggle-pretty-entities))
 
-  (setq reftex-default-bibliography
-        (concat (file-name-as-directory org-roam-directory) "references.bib"))
+  (setq reftex-default-bibliography (list
+        (concat (file-name-as-directory org-roam-directory) "references.bib")))
   (setq org-ref-default-bibliography reftex-default-bibliography
         org-ref-pdf-directory "~/Documents/staging/")
         ;org-ref-bibliography-notes "~/Papers/notes.org")
+  (setq org-ref-label-use-font-lock nil)
 
   ; Add org-babel settings
   (org-babel-do-load-languages
