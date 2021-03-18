@@ -3,6 +3,8 @@
 BUILTIN=eDP1
 DP=DP1
 HDMI=HDMI2
+HUB_A=DP1-1
+HUB_B=DP1-2
 
 
 readonly I3_CONFIG="$HOME/.config/i3/config"
@@ -11,6 +13,14 @@ i3-settings() {
     tmp=$(mktemp)
     cat <(sed '/#</q' "$I3_CONFIG") - <(sed -n '/#>/,$p' "$I3_CONFIG") >"$tmp"
     mv "$tmp" "$I3_CONFIG"
+}
+
+set-side-monitor() {
+    i3-settings <<EOF
+workspace 8:www output $1
+workspace 9:comms output ${2:-$1}
+workspace 10:music output ${2:-$1}
+EOF
 }
 
 readonly connected=$(xrandr --current | grep " connected" | cut -d' ' -f1)
@@ -28,32 +38,25 @@ if have $DP && have $HDMI; then
         --output $BUILTIN --off \
         --output $HDMI --auto --primary \
         --output $DP --auto --right-of $HDMI
-
-    i3-settings <<EOF
-workspace 8:www output $DP
-workspace 9:comms output $DP
-workspace 10:music output $DP
-EOF
+    set-side-monitor "$DP"
+elif have $HUB_A && have $HUB_B; then
+    xrandr \
+        --output $BUILTIN --auto \
+        --output $HUB_A --auto --right-of $BUILTIN --primary \
+        --output $HUB_B --auto --right-of $HUB_A
+    set-side-monitor "$HUB_B" "$BUILTIN"
 elif have $HDMI; then
     xrandr \
         --output $BUILTIN --auto \
         --output $HDMI --auto --primary --right-of $BUILTIN \
         --output $DP --off
-    i3-settings <<EOF
-workspace 8:www output $BUILTIN
-workspace 9:comms output $BUILTIN
-workspace 10:music output $BUILTIN
-EOF
+    set-side-monitor "$BUILTIN"
 else
     xrandr \
         --output $BUILTIN --auto --primary \
         --output $HDMI --off \
         --output $DP --off
-    i3-settings <<EOF
-workspace 8:www output primary
-workspace 9:comms output primary
-workspace 10:music output primary
-EOF
+    set-side-monitor primary
 fi
 
 # Reload i3 if already started
