@@ -566,6 +566,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (add-to-list 'recentf-exclude "/tmp/garbo.*")
   (setq custom-file (make-temp-file "garbo"))
   (load custom-file)
+  (setq org-roam-v2-ack t)
   )
 
 (defun dotspacemacs/user-load ()
@@ -583,6 +584,14 @@ dump.")
                 (read-string "Vector name: "))))
     (insert "\\mathbf{" text "}")))
 
+(defun jamie/org-roam-node-insert (&optional filter-fn)
+  (interactive)
+  (org-roam-node-insert filter-fn)
+  (save-excursion
+    (when (search-backward "\]\[" nil t)
+      (forward-char 2)
+      (insert "§"))))
+
 (defun dotspacemacs/user-config ()
   "Configuration for user code:
 This function is called at the very end of Spacemacs startup, after layer
@@ -597,15 +606,14 @@ before packages are loaded."
         '(prog-mode-hook markdown-mode-hook org-mode-hook))
   ;(spacemacs/toggle-smartparens-globally-off)
 
-  (setq org-roam-directory "~/org/notes"
-        org-roam-db-location "~/.org-roam.db"
-        org-roam-link-title-format "§%s")
+  (setq org-roam-directory (file-truename "~/org/notes")
+        org-roam-db-location "~/.org-roam.db")
   (spacemacs/declare-prefix "ar" "org-roam")
   (spacemacs/set-leader-keys
-    "arr" 'org-roam
-    "art" 'org-roam-dailies-today
-    "arf" 'org-roam-find-file
-    "ari" 'org-roam-insert
+    "arr" 'org-roam-buffer-toggle
+    "arf" 'org-roam-node-find
+    "ari" 'jamie/org-roam-node-insert
+    "art" 'org-roam-dailies-find-today
     "arg" 'org-roam-graph)
   (spacemacs/declare-prefix-for-mode 'org-mode "mr" "org-roam")
   (spacemacs/set-leader-keys-for-major-mode 'org-mode
@@ -614,31 +622,43 @@ before packages are loaded."
     "rf" 'org-roam-find-file
     "ri" 'org-roam-insert
     "rg" 'org-roam-graph)
-  (add-hook 'org-mode-hook 'org-roam-mode)
   (add-hook 'org-mode-hook 'spacemacs/toggle-auto-fill-mode-on)
-  (evil-define-key 'insert org-roam-mode-map (kbd "C-c i") 'org-roam-insert)
+  (evil-define-key 'insert org-mode-map (kbd "C-c i") 'jamie/org-roam-node-insert)
+
+  ;; for org-roam-buffer-toggle
+  ;; Use side-window like V1
+  ;; This can take advantage of slots available with it
+  ;(add-to-list 'display-buffer-alist
+  ;             '("\\*org-roam\\*"
+  ;               (display-buffer-in-side-window)
+  ;               (side . right)
+  ;               (slot . 0)
+  ;               (window-width . 0.25)
+  ;               (preserve-size . (t nil))
+  ;               (window-parameters . ((no-other-window . t)
+  ;                                     (no-delete-other-windows . t)))))
 
   ;; Org-roam capture templates
   (setq org-roam-capture-templates
-        '(("d" "default" plain (function org-roam--capture-get-point)
+        '(("d" "default" plain
            "\nTags :: %?"
-           :file-name "%<%Y%m%d%H%M%S>-${slug}"
-           :head "#+title: ${title}\n"
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                              "#+title: ${title}\n")
            :unnarrowed t)
-          ("p" "private" plain (function org-roam--capture-get-point)
+          ("p" "private" plain
            "\nTags :: %?"
-           :file-name "private/%<%Y%m%d%H%M%S>-${slug}"
-           :head "#+title: ${title}\n"
+           :if-new (file+head "private/%<%Y%m%d%H%M%S>-${slug}.org"
+                              "#+title: ${title}\n")
            :unnarrowed t)
-          ("s" "source" plain (function org-roam--capture-get-point)
+          ("s" "source" plain
            "\nAuthor :: %?\nTitle :: \nURL :: \nTags :: "
-           :file-name "%<%Y%m%d%H%M%S>-${slug}"
-           :head "#+title: ${title}\n"
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                              "#+title: ${title}\n")
            :unnarrowed t)
-          ("r" "recipe" plain (function org-roam--capture-get-point)
+          ("r" "recipe" plain
            "\nTags :: [[file:20210303214935-recipes.org][§recipes]] %?\nSource :: \nCourses :: \n\n* Ingredients\n\n - \n\n* Tools\n\n - \n\n* Instructions\n\n"
-           :file-name "%<%Y%m%d%H%M%S>-${slug}"
-           :head "#+title: ${title}\n"
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                              "#+title: ${title}\n")
            :unnarrowed t)))
 
   ;; Deft settings
