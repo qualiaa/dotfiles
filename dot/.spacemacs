@@ -689,7 +689,18 @@ before packages are loaded."
       ;; Rendering
       org-bullets-bullet-list '("○" "◉" "✿" "✸")
       org-preview-latex-default-process 'dvisvgm
-      org-format-latex-options (append '(:scale 1.5) org-format-latex-options))
+      org-format-latex-options (append '(:scale 1.5) org-format-latex-options)
+
+      org-capture-templates '(("t" "Task" entry (file+headline "~/org/todo.org" "Tasks")
+                               "** TODO %? %^G\n  SCHEDULED: %^T\n  %i\n  %a")
+                              ("w" "Task (work)" entry (file+headline "~/org/work.org" "Tasks")
+                               "** TODO %? %^G\n  SCHEDULED: %^T\n  %i\n  %a")
+                              ("f" "Friday Project (work)" entry (file+headline "~/org/work.org" "Friday Projects")
+                               "** TODO %? %^G\n  SCHEDULED: %^T\n  %i\n  %a")
+                              ("j" "Journal" entry (file+datetree "~/org/journal.org")
+                               "* %?\nEntered on %U\n  %i\n  %a"))
+
+      )
     (org-toggle-pretty-entities))
 
   (setq reftex-default-bibliography
@@ -699,6 +710,7 @@ before packages are loaded."
         ;org-ref-bibliography-notes "~/Papers/notes.org")
   (require 'bibtex)
   (bibtex-set-dialect 'biblatex)
+  (setq org-ref-label-use-font-lock nil)
 
   ; Add org-babel settings
   (org-babel-do-load-languages
