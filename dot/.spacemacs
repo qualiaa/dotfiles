@@ -691,10 +691,12 @@ before packages are loaded."
     (org-toggle-pretty-entities))
 
   (setq reftex-default-bibliography
-        (concat (file-name-as-directory org-roam-directory) "references.bib"))
+        (list (concat (file-name-as-directory org-roam-directory) "references.bib")))
   (setq org-ref-default-bibliography reftex-default-bibliography
         org-ref-pdf-directory "~/Documents/staging/")
         ;org-ref-bibliography-notes "~/Papers/notes.org")
+  (require 'bibtex)
+  (bibtex-set-dialect 'biblatex)
 
   ; Add org-babel settings
   (org-babel-do-load-languages
