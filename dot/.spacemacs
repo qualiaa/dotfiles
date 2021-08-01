@@ -39,12 +39,14 @@ This function should only modify configuration layer settings."
      lua
      gpu
      (haskell :variables haskell-completion-backend 'lsp)
+     html
      perl5
      (python :variables
              python-backend 'lsp
              lsp-server 'pyls
              python-test-runner 'pytest)
      racket
+     rust
      shell-scripts
      ;; Data schemas
      csv
