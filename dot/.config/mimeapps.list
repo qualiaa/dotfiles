@@ -21,8 +21,10 @@ application/x-extension-xhtml=firefox.desktop
 application/x-extension-xht=firefox.desktop
 x-scheme-handler/postman=Postman.desktop
 x-scheme-handler/msteams=teams.desktop
+x-scheme-handler/org-protocol=org-protocol.desktop
 
 [Added Associations]
 image/gif=sxiv.desktop;
 audio/x-vorbis+ogg=vlc.desktop;
 video/mp4=vlc.desktop;
+image/jpeg=org.gnome.eog.desktop;gimp.desktop;okularApplication_kimgio.desktop;

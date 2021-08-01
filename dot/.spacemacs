@@ -39,12 +39,14 @@ This function should only modify configuration layer settings."
      lua
      gpu
      (haskell :variables haskell-completion-backend 'lsp)
+     html
      perl5
      (python :variables
              python-backend 'lsp
              lsp-server 'pyls
              python-test-runner 'pytest)
      racket
+     rust
      shell-scripts
      ;; Data schemas
      csv
@@ -81,12 +83,13 @@ This function should only modify configuration layer settings."
      ;version-control
      )
 
-   ;; List of additional packages that will be installed without being
-   ;; wrapped in a layer. If you need some configuration for these
-   ;; packages, then consider creating a layer. You can also put the
-   ;; configuration in `dotspacemacs/user-config'.
-   ;; To use a local version of a package, use the `:location' property:
-   ;; '(your-package :location "~/path/to/your-package/")
+   ;; List of additional packages that will be installed without being wrapped
+   ;; in a layer (generally the packages are installed only and should still be
+   ;; loaded using load/require/use-package in the user-config section below in
+   ;; this file). If you need some configuration for these packages, then
+   ;; consider creating a layer. You can also put the configuration in
+   ;; `dotspacemacs/user-config'. To use a local version of a package, use the
+   ;; `:location' property: '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages
    '(bnf-mode
@@ -205,14 +208,24 @@ It should only modify the values of Spacemacs settings."
    ;; List of items to show in startup buffer or an association list of
    ;; the form `(list-type . list-size)`. If nil then it is disabled.
    ;; Possible values for list-type are:
-   ;; `recents' `bookmarks' `projects' `agenda' `todos'.
+   ;; `recents' `recents-by-project' `bookmarks' `projects' `agenda' `todos'.
    ;; List sizes may be nil, in which case
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
+   ;; The exceptional case is `recents-by-project', where list-type must be a
+   ;; pair of numbers, e.g. `(recents-by-project . (7 .  5))', where the first
+   ;; number is the project limit and the second the limit on the recent files
+   ;; within a project.
    dotspacemacs-startup-lists '((recents . 5)
                                 (projects . 7))
 
    ;; True if the home buffer should respond to resize events. (default t)
    dotspacemacs-startup-buffer-responsive t
+
+   ;; Show numbers before the startup list lines. (default t)
+   dotspacemacs-show-startup-list-numbers t
+
+   ;; The minimum delay in seconds between number key presses. (default 0.4)
+   dotspacemacs-startup-buffer-multi-digit-delay 0.4
 
    ;; Default major mode for a new empty buffer. Possible values are mode
    ;; names such as `text-mode'; and `nil' to use Fundamental mode.
@@ -253,7 +266,9 @@ It should only modify the values of Spacemacs settings."
    ;; (default t)
    dotspacemacs-colorize-cursor-according-to-state t
 
-   ;; Default font or prioritized list of fonts.
+   ;; Default font or prioritized list of fonts. The `:size' can be specified as
+   ;; a non-negative integer (pixel size), or a floating-point (point size).
+   ;; Point size is recommended, because it's device independent. (default 10.0)
    dotspacemacs-default-font '("Inconsolata"
                                :size 14.0
                                :weight normal
@@ -391,6 +406,10 @@ It should only modify the values of Spacemacs settings."
    ;; when it reaches the top or bottom of the screen. (default t)
    dotspacemacs-smooth-scrolling t
 
+   ;; Show the scroll bar while scrolling. The auto hide time can be configured
+   ;; by setting this variable to a number. (default t)
+   dotspacemacs-scroll-bar-while-scrolling t
+
    ;; Control line numbers activation.
    ;; If set to `t', `relative' or `visual' then line numbers are enabled in all
    ;; `prog-mode' and `text-mode' derivatives. If set to `relative', line
@@ -421,9 +440,14 @@ It should only modify the values of Spacemacs settings."
    ;; (default 'evil)
    dotspacemacs-folding-method 'evil
 
-   ;; If non-nil `smartparens-strict-mode' will be enabled in programming modes.
+   ;; If non-nil and `dotspacemacs-activate-smartparens-mode' is also non-nil,
+   ;; `smartparens-strict-mode' will be enabled in programming modes.
    ;; (default nil)
    dotspacemacs-smartparens-strict-mode nil
+
+   ;; If non-nil smartparens-mode will be enabled in programming modes.
+   ;; (default t)
+   dotspacemacs-activate-smartparens-mode t
 
    ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
    ;; over any automatically added closing parenthesis, bracket, quote, etc...
@@ -471,12 +495,18 @@ It should only modify the values of Spacemacs settings."
    ;; %n - Narrow if appropriate
    ;; %z - mnemonics of buffer, terminal, and keyboard coding systems
    ;; %Z - like %z, but including the end-of-line format
+   ;; If nil then Spacemacs uses default `frame-title-format' to avoid
+   ;; performance issues, instead of calculating the frame title by
+   ;; `spacemacs/title-prepare' all the time.
    ;; (default "%I@%S")
    dotspacemacs-frame-title-format "%I@%S"
 
    ;; Format specification for setting the icon title format
    ;; (default nil - same as frame-title-format)
    dotspacemacs-icon-title-format nil
+
+   ;; Show trailing whitespace (default t)
+   dotspacemacs-show-trailing-whitespace t
 
    ;; Delete whitespace while saving buffer. Possible values are `all'
    ;; to aggressively delete empty line and long sequences of whitespace,
@@ -491,6 +521,9 @@ It should only modify the values of Spacemacs settings."
    ;; If it does deactivate it here.
    ;; (default t)
    dotspacemacs-use-clean-aindent-mode t
+
+   ;; Accept SPC as y for prompts if non nil. (default nil)
+   dotspacemacs-use-SPC-as-y nil
 
    ;; If non-nil shift your number row to match the entered keyboard layout
    ;; (only in insert state). Currently supported keyboard layouts are:
@@ -510,7 +543,10 @@ It should only modify the values of Spacemacs settings."
 
    ;; If nil the home buffer shows the full path of agenda items
    ;; and todos. If non nil only the file name is shown.
-   dotspacemacs-home-shorten-agenda-source nil))
+   dotspacemacs-home-shorten-agenda-source nil
+
+   ;; If non-nil then byte-compile some of Spacemacs files.
+   dotspacemacs-byte-compile nil))
 
 (defun dotspacemacs/user-env ()
   "Environment variables setup.
@@ -532,14 +568,14 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (add-to-list 'recentf-exclude "/tmp/garbo.*")
   (setq custom-file (make-temp-file "garbo"))
   (load custom-file)
+  (setq org-roam-v2-ack t)
   )
 
 (defun dotspacemacs/user-load ()
   "Library to load while dumping.
 This function is called only while dumping Spacemacs configuration. You can
 `require' or `load' the libraries of your choice that will be included in the
-dump."
-  )
+dump.")
 
 ;;; TODO Move into custom library
 (defun latex-vectorify ()
@@ -549,6 +585,14 @@ dump."
                   (delete-and-extract-region (region-beginning) (region-end))
                 (read-string "Vector name: "))))
     (insert "\\mathbf{" text "}")))
+
+(defun jamie/org-roam-node-insert (&optional filter-fn)
+  (interactive)
+  (org-roam-node-insert filter-fn)
+  (save-excursion
+    (when (search-backward "\]\[" nil t)
+      (forward-char 2)
+      (insert "§"))))
 
 (defun dotspacemacs/user-config ()
   "Configuration for user code:
@@ -564,15 +608,14 @@ before packages are loaded."
         '(prog-mode-hook markdown-mode-hook org-mode-hook))
   ;(spacemacs/toggle-smartparens-globally-off)
 
-  (setq org-roam-directory "~/org/notes"
-        org-roam-db-location "~/.org-roam.db"
-        org-roam-link-title-format "§%s")
+  (setq org-roam-directory (file-truename "~/org/notes")
+        org-roam-db-location "~/.org-roam.db")
   (spacemacs/declare-prefix "ar" "org-roam")
   (spacemacs/set-leader-keys
-    "arr" 'org-roam
-    "art" 'org-roam-dailies-today
-    "arf" 'org-roam-find-file
-    "ari" 'org-roam-insert
+    "arr" 'org-roam-buffer-toggle
+    "arf" 'org-roam-node-find
+    "ari" 'jamie/org-roam-node-insert
+    "art" 'org-roam-dailies-find-today
     "arg" 'org-roam-graph)
   (spacemacs/declare-prefix-for-mode 'org-mode "mr" "org-roam")
   (spacemacs/set-leader-keys-for-major-mode 'org-mode
@@ -581,31 +624,43 @@ before packages are loaded."
     "rf" 'org-roam-find-file
     "ri" 'org-roam-insert
     "rg" 'org-roam-graph)
-  (add-hook 'org-mode-hook 'org-roam-mode)
   (add-hook 'org-mode-hook 'spacemacs/toggle-auto-fill-mode-on)
-  (evil-define-key 'insert org-roam-mode-map (kbd "C-c i") 'org-roam-insert)
+  (evil-define-key 'insert org-mode-map (kbd "C-c i") 'jamie/org-roam-node-insert)
+
+  ;; for org-roam-buffer-toggle
+  ;; Use side-window like V1
+  ;; This can take advantage of slots available with it
+  ;(add-to-list 'display-buffer-alist
+  ;             '("\\*org-roam\\*"
+  ;               (display-buffer-in-side-window)
+  ;               (side . right)
+  ;               (slot . 0)
+  ;               (window-width . 0.25)
+  ;               (preserve-size . (t nil))
+  ;               (window-parameters . ((no-other-window . t)
+  ;                                     (no-delete-other-windows . t)))))
 
   ;; Org-roam capture templates
   (setq org-roam-capture-templates
-        '(("d" "default" plain (function org-roam--capture-get-point)
+        '(("d" "default" plain
            "\nTags :: %?"
-           :file-name "%<%Y%m%d%H%M%S>-${slug}"
-           :head "#+title: ${title}\n"
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                              "#+title: ${title}\n")
            :unnarrowed t)
-          ("p" "private" plain (function org-roam--capture-get-point)
+          ("p" "private" plain
            "\nTags :: %?"
-           :file-name "private/%<%Y%m%d%H%M%S>-${slug}"
-           :head "#+title: ${title}\n"
+           :if-new (file+head "private/%<%Y%m%d%H%M%S>-${slug}.org"
+                              "#+title: ${title}\n")
            :unnarrowed t)
-          ("s" "source" plain (function org-roam--capture-get-point)
+          ("s" "source" plain
            "\nAuthor :: %?\nTitle :: \nURL :: \nTags :: "
-           :file-name "%<%Y%m%d%H%M%S>-${slug}"
-           :head "#+title: ${title}\n"
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                              "#+title: ${title}\n")
            :unnarrowed t)
-          ("r" "recipe" plain (function org-roam--capture-get-point)
+          ("r" "recipe" plain
            "\nTags :: [[file:20210303214935-recipes.org][§recipes]] %?\nSource :: \nCourses :: \n\n* Ingredients\n\n - \n\n* Tools\n\n - \n\n* Instructions\n\n"
-           :file-name "%<%Y%m%d%H%M%S>-${slug}"
-           :head "#+title: ${title}\n"
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                              "#+title: ${title}\n")
            :unnarrowed t)))
 
   ;; Deft settings
@@ -638,10 +693,12 @@ before packages are loaded."
     (org-toggle-pretty-entities))
 
   (setq reftex-default-bibliography
-        (concat (file-name-as-directory org-roam-directory) "references.bib"))
+        (list (concat (file-name-as-directory org-roam-directory) "references.bib")))
   (setq org-ref-default-bibliography reftex-default-bibliography
         org-ref-pdf-directory "~/Documents/staging/")
         ;org-ref-bibliography-notes "~/Papers/notes.org")
+  (require 'bibtex)
+  (bibtex-set-dialect 'biblatex)
 
   ; Add org-babel settings
   (org-babel-do-load-languages
@@ -649,15 +706,15 @@ before packages are loaded."
    '((emacs-lisp . t)
      (org . t)
      (lilypond . t)))
-  (add-to-list 'org-babel-default-header-args:lilypond-user
-               '(:prologue . "\\paper{
-     indent=0\\mm
-     line-width=200\\mm
-     oddFooterMarkup=##f
-     oddHeaderMarkup=##f
-     bookTitleMarkup = ##f
-     scoreTitleMarkup = ##f
-     }"))
+  ;(add-to-list 'org-babel-default-header-args:lilypond-user
+  ;             '(:prologue . "\\paper{
+  ;   indent=0\\mm
+  ;   line-width=200\\mm
+  ;   oddFooterMarkup=##f
+  ;   oddHeaderMarkup=##f
+  ;   bookTitleMarkup = ##f
+  ;   scoreTitleMarkup = ##f
+  ;   }"))
 
   ;; My own functions
   (spacemacs/set-leader-keys-for-major-mode 'org-mode
