@@ -43,7 +43,7 @@ elif have $HUB_A && have $HUB_B; then
     xrandr \
         --output $BUILTIN --auto \
         --output $HUB_A --auto --right-of $BUILTIN --primary \
-        --output $HUB_B --auto --right-of $HUB_A
+        --output $HUB_B --auto --right-of $HUB_A --rotate left
     set-side-monitor "$HUB_B" "$BUILTIN"
 elif have $HDMI; then
     xrandr \
