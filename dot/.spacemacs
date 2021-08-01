@@ -706,15 +706,15 @@ before packages are loaded."
    '((emacs-lisp . t)
      (org . t)
      (lilypond . t)))
-  (add-to-list 'org-babel-default-header-args:lilypond-user
-               '(:prologue . "\\paper{
-     indent=0\\mm
-     line-width=200\\mm
-     oddFooterMarkup=##f
-     oddHeaderMarkup=##f
-     bookTitleMarkup = ##f
-     scoreTitleMarkup = ##f
-     }"))
+  ;(add-to-list 'org-babel-default-header-args:lilypond-user
+  ;             '(:prologue . "\\paper{
+  ;   indent=0\\mm
+  ;   line-width=200\\mm
+  ;   oddFooterMarkup=##f
+  ;   oddHeaderMarkup=##f
+  ;   bookTitleMarkup = ##f
+  ;   scoreTitleMarkup = ##f
+  ;   }"))
 
   ;; My own functions
   (spacemacs/set-leader-keys-for-major-mode 'org-mode
