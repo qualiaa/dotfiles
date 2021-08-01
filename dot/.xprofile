@@ -1,8 +1,9 @@
 [ -f ~/.exports ] && source ~/.exports
-[ -d ~/.wallpapers ] && feh --bg-fill --randomize ~/.wallpapers/* &
 [ -f ~/.Xresources ] && xrdb -merge ~/.Xresources
 
 command -v update-monitors >/dev/null && update-monitors
+
+[ -d ~/.wallpapers ] && feh --bg-fill --randomize ~/.wallpapers/* &
 
 redshift -l51:-1 -t 6500:3000 &
 numlockx &
