@@ -210,3 +210,5 @@ bar {
     }
     font -artwiz-lime-medium-r-normal-*-10-*-*-*-*-*-*-*
 }
+
+exec --no-startup-id i3-msg workspace 1
