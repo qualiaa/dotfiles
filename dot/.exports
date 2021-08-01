@@ -4,6 +4,8 @@
 export JAVA_HOME=/usr/lib/jvm/java-13-openjdk
 # Espressif ESP32 toolchain
 PATH=$HOME/usr/opt/xtensa-esp32-elf/bin:"$PATH"
+# Poetry
+PATH="$HOME/.poetry/bin:$PATH"
 # Espressif ESP32 devkit
 export IDF_PATH=$HOME/usr/opt/esp-idf
 PATH=$IDF_PATH/tools:"$PATH"
