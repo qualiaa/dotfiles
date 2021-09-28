@@ -579,7 +579,7 @@ This function is called only while dumping Spacemacs configuration. You can
 dump.")
 
 ;;; TODO Move into custom library
-(defun latex-vectorify ()
+(defun jamie/latex-vectorify ()
   "Format region or read-string as LaTeX vector"
   (interactive)
   (let ((text (if (use-region-p)
@@ -786,8 +786,8 @@ before packages are loaded."
 
   ;; My own functions
   (spacemacs/set-leader-keys-for-major-mode 'org-mode
-    "iv" 'latex-vectorify)
-  (evil-define-key 'insert org-roam-mode-map (kbd "C-c v") 'latex-vectorify)
+    "iv" 'jamie/latex-vectorify)
+  (evil-define-key 'insert org-mode-map (kbd "C-c v") 'jamie/latex-vectorify)
 
   (setq-default
    ;; EVIL settings
