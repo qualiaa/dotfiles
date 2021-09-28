@@ -755,6 +755,8 @@ before packages are loaded."
                               ("j" "Journal" entry (file+datetree "~/org/journal.org")
                                "* %?\nEntered on %U\n  %i\n  %a"))
 
+      latex-class-options "[11pt,a4paper]"
+
       )
     (org-toggle-pretty-entities))
   (fix-org-equation-tags)
