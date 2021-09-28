@@ -93,7 +93,8 @@ This function should only modify configuration layer settings."
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages
    '(bnf-mode
-     ripgrep)
+     ripgrep
+     (mathpix :location (recipe :fetcher github :repo "jethrokuan/mathpix.el")))
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -588,11 +589,19 @@ dump.")
 
 (defun jamie/org-roam-node-insert (&optional filter-fn)
   (interactive)
-  (org-roam-node-insert filter-fn)
+  (let ((start-point (point)))
+    (org-roam-node-insert filter-fn)
+    (save-excursion
+      (goto-char start-point)
+      (when (search-forward "\]\[" nil t)
+        (insert "§")))))
+
+(defun jamie/mathpix-equation (&optional filter-fn)
+  (interactive)
+  (insert "\n\\begin{equation*}\n")
   (save-excursion
-    (when (search-backward "\]\[" nil t)
-      (forward-char 2)
-      (insert "§"))))
+    (insert "\n\\end{equation*}\n"))
+  (mathpix-screenshot))
 
 (defun dotspacemacs/user-config ()
   "Configuration for user code:
@@ -626,6 +635,8 @@ before packages are loaded."
     "rg" 'org-roam-graph)
   (add-hook 'org-mode-hook 'spacemacs/toggle-auto-fill-mode-on)
   (evil-define-key 'insert org-mode-map (kbd "C-c i") 'jamie/org-roam-node-insert)
+  (evil-define-key 'insert org-mode-map (kbd "C-c m") 'mathpix-screenshot)
+  (evil-define-key 'insert org-mode-map (kbd "C-c M") 'jamie/mathpix-equation)
 
   ;; for org-roam-buffer-toggle
   ;; Use side-window like V1
@@ -674,6 +685,7 @@ before packages are loaded."
   ;; Org settings
   (add-to-list 'recentf-exclude "/home/.+/org/.*")
   (with-eval-after-load 'org
+    (require 'mathpix)
     (require 'org-checklist)
     (setq
       ;; TODO settings
