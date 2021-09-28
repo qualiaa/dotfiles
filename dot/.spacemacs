@@ -603,6 +603,49 @@ dump.")
     (insert "\n\\end{equation*}\n"))
   (mathpix-screenshot))
 
+(defun fix-org-equation-tags ()
+  ;; https://kitchingroup.cheme.cmu.edu/blog/2016/11/07/Better-equation-numbering-in-LaTeX-fragments-in-org-mode/
+  (defun org-renumber-environment (orig-func &rest args)
+    (let ((results '())
+          (counter -1)
+          (numberp))
+
+      (setq results (loop for (begin .  env) in
+                          (org-element-map (org-element-parse-buffer) 'latex-environment
+                            (lambda (env)
+                              (cons
+                               (org-element-property :begin env)
+                               (org-element-property :value env))))
+                          collect
+                          (cond
+                           ((and (string-match "\\\\begin{equation}" env)
+                                 (not (string-match "\\\\tag{" env)))
+                            (incf counter)
+                            (cons begin counter))
+                           ((string-match "\\\\begin{align}" env)
+                            (prog2
+                                (incf counter)
+                                (cons begin counter)
+                              (with-temp-buffer
+                                (insert env)
+                                (goto-char (point-min))
+                                ;; \\ is used for a new line. Each one leads to a number
+                                (incf counter (count-matches "\\\\$"))
+                                ;; unless there are nonumbers.
+                                (goto-char (point-min))
+                                (decf counter (count-matches "\\nonumber")))))
+                           (t
+                            (cons begin nil)))))
+
+      (when (setq numberp (cdr (assoc (point) results)))
+        (setf (car args)
+              (concat
+               (format "\\setcounter{equation}{%s}\n" numberp)
+               (car args)))))
+
+    (apply orig-func args))
+  (advice-add 'org-create-formula-image :around #'org-renumber-environment))
+
 (defun dotspacemacs/user-config ()
   "Configuration for user code:
 This function is called at the very end of Spacemacs startup, after layer
@@ -714,6 +757,7 @@ before packages are loaded."
 
       )
     (org-toggle-pretty-entities))
+  (fix-org-equation-tags)
 
   (setq reftex-default-bibliography
         (list (concat (file-name-as-directory org-roam-directory) "references.bib")))
