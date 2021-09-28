@@ -43,7 +43,7 @@ This function should only modify configuration layer settings."
      perl5
      (python :variables
              python-backend 'lsp
-             lsp-server 'pyls
+             python-lsp-server 'pylsp
              python-test-runner 'pytest)
      racket
      rust
