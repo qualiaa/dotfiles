@@ -11,7 +11,7 @@ create_default_packages:
   - ipython
   - ptvsd>=4.2
   - epc
-  - python-language-server[all]
+  - python-lsp-server[all]
   - black
   - isort
   - autoflake
