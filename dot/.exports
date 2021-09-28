@@ -1,9 +1,15 @@
 ### General settings
-[ -n $JAVA_HOME ]    && PATH="$JAVA_HOME/bin:$PATH"
-[ -d ~/usr/bin ]     && PATH="$HOME/usr/bin:$PATH"
-[ -d ~/bin ]         && PATH="$HOME/bin:$PATH"
-[ -d ~/.local/bin ]  && PATH="$HOME/.local/bin:$PATH"
-#[ -d ~/.miniconda3 ] && PATH="$HOME/.miniconda3/bin:$PATH"
+path_add() {
+    [ -d "$1" ] && PATH="$1:$PATH"
+}
+
+path_add "$JAVA_HOME"
+path_add "$HOME/usr/bin"
+path_add "$HOME/bin"
+path_add "$HOME/.local/bin"
+path_add "/usr/local/cuda/bin"
+path_add "$HOME/usr/opt/clion-2021.2/bin/"
+path_add "$HOME/usr/opt/pycharm-2021.2/bin/"
 export PATH
 
 export EDITOR=vim
@@ -12,4 +18,3 @@ export CC=gcc
 export CXX=g++
 export LC_COLLATE=C
 export TERMINAL=urxvt
-
