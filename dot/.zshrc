@@ -927,6 +927,7 @@
 #
 #
 export ZSH=$HOME/.oh-my-zsh
+export HISTSIZE=100000
 
 fzf_ignore_list=(Remote Datasets .oh-my-zsh .nv .mozilla .cache .git '.mypy*' .hg .svn .ssh '.pylint*' .miniconda3)
 fzf_rg_ignore_flags=$(printf -- "-g '!%s' " ${fzf_ignore_list[@]})
