@@ -18,3 +18,4 @@ export CC=gcc
 export CXX=g++
 export LC_COLLATE=C
 export TERMINAL=urxvt
+export TEXMFHOME="$HOME/.texmf"
