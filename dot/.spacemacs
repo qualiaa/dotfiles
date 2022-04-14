@@ -774,6 +774,12 @@ before packages are loaded."
 
       )
     (org-toggle-pretty-entities))
+  (add-to-list 'org-latex-classes
+               '("luffyreport"
+                 "\\documentclass{luffyreport}"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
   (fix-org-equation-tags)
 
   (setq reftex-default-bibliography
