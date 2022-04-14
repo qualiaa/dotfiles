@@ -755,7 +755,22 @@ before packages are loaded."
                               ("j" "Journal" entry (file+datetree "~/org/journal.org")
                                "* %?\nEntered on %U\n  %i\n  %a"))
 
-      latex-class-options "[11pt,a4paper]"
+      org-latex-listings 'minted
+      org-latex-packages-alist '(("" "setspace")
+                                 ("" "enumerate")
+                                 ("utf8" "inputenc")
+                                 ;("a4paper,left=1.75in,right=1in,top=1in,bottom=2.2in" "geometry")
+                                 ("" "xfrac" t)
+                                 ("" "bm" t)
+                                 ("" "xcolor")
+                                 ("" "cleveref")
+                                 ("activate={true,nocompatibility},final,tracking=true,kerning=true,spacing=true" "microtype")
+                                 ("" "mathpazo" t)
+                                 ("scaled" "helvet" t)
+                                 ("scaled=0.85" "beramono" t)
+                                 ("" "minted"))
+      org-latex-pdf-process '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+                              "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f")
 
       )
     (org-toggle-pretty-entities))
