@@ -85,7 +85,7 @@ URxvt*font: xft:Inconsolata:Regular:size=12,xft:Bitstream Vera Sans Mono:Regular
 ! URxvt*imFont:                         fontname
 ! URxvt*title:                          string
 ! URxvt*iconName:                       string
-! URxvt*saveLines:                      number
+URxvt*saveLines:                      100000
 ! URxvt*buffered:                       boolean
 ! URxvt*depth:                          number
 ! URxvt*visual:                         number
