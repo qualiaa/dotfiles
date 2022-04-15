@@ -755,6 +755,7 @@ before packages are loaded."
 
       ;; Rendering
       org-bullets-bullet-list '("○" "◉" "✿" "✸")
+      org-latex-create-formula-image-program 'dvisvgm
       org-preview-latex-default-process 'dvisvgm
       org-format-latex-options (append '(:scale 1.5) org-format-latex-options)
 
@@ -769,6 +770,7 @@ before packages are loaded."
 
       org-latex-listings 'minted
       org-latex-packages-alist '(("" "setspace")
+                                 ("" "amsmath")
                                  ("" "enumerate")
                                  ("utf8" "inputenc")
                                  ;("a4paper,left=1.75in,right=1in,top=1in,bottom=2.2in" "geometry")
@@ -776,13 +778,12 @@ before packages are loaded."
                                  ("" "bm" t)
                                  ("" "xcolor")
                                  ("" "cleveref")
-                                 ("activate={true,nocompatibility},final,tracking=true,kerning=true,spacing=true" "microtype")
                                  ("" "mathpazo" t)
                                  ("scaled" "helvet" t)
                                  ("scaled=0.85" "beramono" t)
                                  ("" "minted"))
-      org-latex-pdf-process '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-                              "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f")
+      org-latex-pdf-process '("lualatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+                              "lualatex -shell-escape -interaction nonstopmode -output-directory %o %f")
 
       )
     (org-toggle-pretty-entities))
