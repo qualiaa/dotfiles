@@ -808,6 +808,7 @@ before packages are loaded."
    'org-babel-load-languages
    '((emacs-lisp . t)
      (org . t)
+     (latex . t)
      (lilypond . t)))
   ;(add-to-list 'org-babel-default-header-args:lilypond-user
   ;             '(:prologue . "\\paper{
