@@ -658,6 +658,10 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
+  ;; Do not save undo tree to files
+  (with-eval-after-load 'undo-tree
+    (setq undo-tree-auto-save-history nil))
+
   ;; Emacs window titles
   (setq-default frame-title-format '("%f [%m]"))
   ;; General coding settings
