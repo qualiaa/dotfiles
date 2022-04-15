@@ -593,9 +593,14 @@ dump.")
   (let ((start-point (point)))
     (org-roam-node-insert filter-fn)
     (save-excursion
-      (goto-char start-point)
-      (when (search-forward "\]\[" nil t)
-        (insert "§")))))
+      (cond
+       ((char-equal (char-before) ?\])
+        (when (search-backward "\]\[" nil t)
+          (forward-char 2)
+          (insert "§")))
+       ((char-equal (char-after) ?\[)
+        (when (search-forward "\]\[" nil t)
+          (insert "§")))))))
 
 (defun jamie/mathpix-equation (&optional filter-fn)
   (interactive)
