@@ -43,7 +43,7 @@ This function should only modify configuration layer settings."
      perl5
      (python :variables
              python-backend 'lsp
-             lsp-server 'pyls
+             python-lsp-server 'pylsp
              python-test-runner 'pytest)
      racket
      rust
@@ -93,7 +93,9 @@ This function should only modify configuration layer settings."
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages
    '(bnf-mode
-     ripgrep)
+     ripgrep
+     (mathpix :location (recipe :fetcher github :repo "jethrokuan/mathpix.el"))
+     (pico8-mode :location (recipe :fetcher github :repo "Kaali/pico8-mode")))
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -578,7 +580,7 @@ This function is called only while dumping Spacemacs configuration. You can
 dump.")
 
 ;;; TODO Move into custom library
-(defun latex-vectorify ()
+(defun jamie/latex-vectorify ()
   "Format region or read-string as LaTeX vector"
   (interactive)
   (let ((text (if (use-region-p)
@@ -588,11 +590,67 @@ dump.")
 
 (defun jamie/org-roam-node-insert (&optional filter-fn)
   (interactive)
-  (org-roam-node-insert filter-fn)
+  (let ((start-point (point)))
+    (org-roam-node-insert filter-fn)
+    (save-excursion
+      (cond
+       ((char-equal (char-before) ?\])
+        (when (search-backward "\]\[" nil t)
+          (forward-char 2)
+          (insert "§")))
+       ((char-equal (char-after) ?\[)
+        (when (search-forward "\]\[" nil t)
+          (insert "§")))))))
+
+(defun jamie/mathpix-equation (&optional filter-fn)
+  (interactive)
+  (insert "\n\\begin{equation*}\n")
   (save-excursion
-    (when (search-backward "\]\[" nil t)
-      (forward-char 2)
-      (insert "§"))))
+    (insert "\n\\end{equation*}\n"))
+  (mathpix-screenshot))
+
+(defun fix-org-equation-tags ()
+  ;; https://kitchingroup.cheme.cmu.edu/blog/2016/11/07/Better-equation-numbering-in-LaTeX-fragments-in-org-mode/
+  (defun org-renumber-environment (orig-func &rest args)
+    (let ((results '())
+          (counter -1)
+          (numberp))
+
+      (setq results (loop for (begin .  env) in
+                          (org-element-map (org-element-parse-buffer) 'latex-environment
+                            (lambda (env)
+                              (cons
+                               (org-element-property :begin env)
+                               (org-element-property :value env))))
+                          collect
+                          (cond
+                           ((and (string-match "\\\\begin{equation}" env)
+                                 (not (string-match "\\\\tag{" env)))
+                            (incf counter)
+                            (cons begin counter))
+                           ((string-match "\\\\begin{align}" env)
+                            (prog2
+                                (incf counter)
+                                (cons begin counter)
+                              (with-temp-buffer
+                                (insert env)
+                                (goto-char (point-min))
+                                ;; \\ is used for a new line. Each one leads to a number
+                                (incf counter (count-matches "\\\\$"))
+                                ;; unless there are nonumbers.
+                                (goto-char (point-min))
+                                (decf counter (count-matches "\\nonumber")))))
+                           (t
+                            (cons begin nil)))))
+
+      (when (setq numberp (cdr (assoc (point) results)))
+        (setf (car args)
+              (concat
+               (format "\\setcounter{equation}{%s}\n" numberp)
+               (car args)))))
+
+    (apply orig-func args))
+  (advice-add 'org-create-formula-image :around #'org-renumber-environment))
 
 (defun dotspacemacs/user-config ()
   "Configuration for user code:
@@ -600,6 +658,10 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
+  ;; Do not save undo tree to files
+  (with-eval-after-load 'undo-tree
+    (setq undo-tree-auto-save-history nil))
+
   ;; Emacs window titles
   (setq-default frame-title-format '("%f [%m]"))
   ;; General coding settings
@@ -626,6 +688,8 @@ before packages are loaded."
     "rg" 'org-roam-graph)
   (add-hook 'org-mode-hook 'spacemacs/toggle-auto-fill-mode-on)
   (evil-define-key 'insert org-mode-map (kbd "C-c i") 'jamie/org-roam-node-insert)
+  (evil-define-key 'insert org-mode-map (kbd "C-c m") 'mathpix-screenshot)
+  (evil-define-key 'insert org-mode-map (kbd "C-c M") 'jamie/mathpix-equation)
 
   ;; for org-roam-buffer-toggle
   ;; Use side-window like V1
@@ -658,12 +722,14 @@ before packages are loaded."
                               "#+title: ${title}\n")
            :unnarrowed t)
           ("r" "recipe" plain
-           "\nTags :: [[file:20210303214935-recipes.org][§recipes]] %?\nSource :: \nCourses :: \n\n* Ingredients\n\n - \n\n* Tools\n\n - \n\n* Instructions\n\n"
+           "\nTags :: [[file:20210303214935-recipes.org][§recipes]] %?\nSource :: \nDiet :: \nCourses :: \nServes :: \nPrep Time :: \nCook Time :: \n\n* Ingredients\n\n - \n\n* Tools\n\n - \n\n* Instructions\n\n"
            :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
                               "#+title: ${title}\n")
            :unnarrowed t)))
 
   ;; Deft settings
+  ;; TODO: Modify deft-strip-summary-regex to handle property drawers.
+  ;;       See: https://jblevins.org/projects/deft/
   (with-eval-after-load 'deft
     (setq deft-directory org-roam-directory
           deft-recursive t
@@ -674,6 +740,7 @@ before packages are loaded."
   ;; Org settings
   (add-to-list 'recentf-exclude "/home/.+/org/.*")
   (with-eval-after-load 'org
+    (require 'mathpix)
     (require 'org-checklist)
     (setq
       ;; TODO settings
@@ -688,6 +755,7 @@ before packages are loaded."
 
       ;; Rendering
       org-bullets-bullet-list '("○" "◉" "✿" "✸")
+      org-latex-create-formula-image-program 'dvisvgm
       org-preview-latex-default-process 'dvisvgm
       org-format-latex-options (append '(:scale 1.5) org-format-latex-options)
 
@@ -700,8 +768,32 @@ before packages are loaded."
                               ("j" "Journal" entry (file+datetree "~/org/journal.org")
                                "* %?\nEntered on %U\n  %i\n  %a"))
 
+      org-latex-listings 'minted
+      org-latex-packages-alist '(("" "setspace")
+                                 ("" "amsmath")
+                                 ("" "enumerate")
+                                 ("utf8" "inputenc")
+                                 ;("a4paper,left=1.75in,right=1in,top=1in,bottom=2.2in" "geometry")
+                                 ("" "xfrac" t)
+                                 ("" "bm" t)
+                                 ("" "xcolor")
+                                 ("" "cleveref")
+                                 ("" "mathpazo" t)
+                                 ("scaled" "helvet" t)
+                                 ("scaled=0.85" "beramono" t)
+                                 ("" "minted"))
+      org-latex-pdf-process '("lualatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+                              "lualatex -shell-escape -interaction nonstopmode -output-directory %o %f")
+
       )
     (org-toggle-pretty-entities))
+  (add-to-list 'org-latex-classes
+               '("luffyreport"
+                 "\\documentclass{luffyreport}"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+  (fix-org-equation-tags)
 
   (setq reftex-default-bibliography
         (list (concat (file-name-as-directory org-roam-directory) "references.bib")))
@@ -717,6 +809,7 @@ before packages are loaded."
    'org-babel-load-languages
    '((emacs-lisp . t)
      (org . t)
+     (latex . t)
      (lilypond . t)))
   ;(add-to-list 'org-babel-default-header-args:lilypond-user
   ;             '(:prologue . "\\paper{
@@ -730,8 +823,8 @@ before packages are loaded."
 
   ;; My own functions
   (spacemacs/set-leader-keys-for-major-mode 'org-mode
-    "iv" 'latex-vectorify)
-  (evil-define-key 'insert org-roam-mode-map (kbd "C-c v") 'latex-vectorify)
+    "iv" 'jamie/latex-vectorify)
+  (evil-define-key 'insert org-mode-map (kbd "C-c v") 'jamie/latex-vectorify)
 
   (setq-default
    ;; EVIL settings

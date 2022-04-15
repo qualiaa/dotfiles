@@ -1,23 +1,26 @@
+path_add() {
+    [ -d "$1" ] && PATH="$1:$PATH"
+}
+
 ### Home specific exports
 
 # Java
 export JAVA_HOME=/usr/lib/jvm/java-13-openjdk
-# Espressif ESP32 toolchain
-PATH=$HOME/usr/opt/xtensa-esp32-elf/bin:"$PATH"
 # Poetry
-PATH="$HOME/.poetry/bin:$PATH"
+path_add "$HOME/.poetry/bin"
+# Espressif ESP32 toolchain
+path_add "$HOME/usr/opt/xtensa-esp32-elf/bin"
 # Espressif ESP32 devkit
 export IDF_PATH=$HOME/usr/opt/esp-idf
-PATH=$IDF_PATH/tools:"$PATH"
+path_add "$IDF_PATH/tools"
+
 
 
 ### General settings
-
-[ -n $JAVA_HOME ]    && PATH="$JAVA_HOME/bin:$PATH"
-[ -d ~/usr/bin ]     && PATH="$HOME/usr/bin:$PATH"
-[ -d ~/bin ]         && PATH="$HOME/bin:$PATH"
-[ -d ~/.local/bin ]  && PATH="$HOME/.local/bin:$PATH"
-#[ -d ~/.miniconda3 ] && PATH="$HOME/.miniconda3/bin:$PATH"
+path_add "$JAVA_HOME"
+path_add "$HOME/usr/bin"
+path_add "$HOME/bin"
+path_add "$HOME/.local/bin"
 export PATH
 
 export EDITOR=vim
@@ -26,4 +29,5 @@ export CC=gcc
 export CXX=g++
 export LC_COLLATE=C
 export TERMINAL=urxvt
+export TEXMFHOME="$HOME/.texmf"
 

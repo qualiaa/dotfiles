@@ -8,10 +8,11 @@ create_default_packages:
   - tox
   - pylint
   - flake8
+  - poetry
   - ipython
   - ptvsd>=4.2
   - epc
-  - python-language-server[all]
+  - python-lsp-server[all]
   - black
   - isort
   - autoflake

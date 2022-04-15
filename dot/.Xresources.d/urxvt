@@ -86,7 +86,7 @@ URxvt*font: xft:Inconsolata for Powerline:size=14,xft:Bitstream Vera Sans Mono:R
 ! URxvt*imFont:                         fontname
 ! URxvt*title:                          string
 ! URxvt*iconName:                       string
-! URxvt*saveLines:                      number
+URxvt*saveLines:                      100000
 ! URxvt*buffered:                       boolean
 ! URxvt*depth:                          number
 ! URxvt*visual:                         number
