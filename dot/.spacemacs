@@ -718,12 +718,14 @@ before packages are loaded."
                               "#+title: ${title}\n")
            :unnarrowed t)
           ("r" "recipe" plain
-           "\nTags :: [[file:20210303214935-recipes.org][§recipes]] %?\nSource :: \nCourses :: \n\n* Ingredients\n\n - \n\n* Tools\n\n - \n\n* Instructions\n\n"
+           "\nTags :: [[file:20210303214935-recipes.org][§recipes]] %?\nSource :: \nDiet :: \nCourses :: \nServes :: \nPrep Time :: \nCook Time :: \n\n* Ingredients\n\n - \n\n* Tools\n\n - \n\n* Instructions\n\n"
            :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
                               "#+title: ${title}\n")
            :unnarrowed t)))
 
   ;; Deft settings
+  ;; TODO: Modify deft-strip-summary-regex to handle property drawers.
+  ;;       See: https://jblevins.org/projects/deft/
   (with-eval-after-load 'deft
     (setq deft-directory org-roam-directory
           deft-recursive t
