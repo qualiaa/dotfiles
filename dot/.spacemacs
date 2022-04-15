@@ -94,7 +94,8 @@ This function should only modify configuration layer settings."
    dotspacemacs-additional-packages
    '(bnf-mode
      ripgrep
-     (mathpix :location (recipe :fetcher github :repo "jethrokuan/mathpix.el")))
+     (mathpix :location (recipe :fetcher github :repo "jethrokuan/mathpix.el"))
+     (pico8-mode :location (recipe :fetcher github :repo "Kaali/pico8-mode")))
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
