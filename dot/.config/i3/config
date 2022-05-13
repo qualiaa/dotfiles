@@ -6,9 +6,9 @@ floating_modifier $mod
 
 # Screen Settings
 #< DO NOT EDIT THIS SECTION
-workspace 8:www output primary
-workspace 9:comms output primary
-workspace 10:music output primary
+workspace 8:www output DP1-2
+workspace 9:comms output eDP1
+workspace 10:music output eDP1
 #>
 
 
