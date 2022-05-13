@@ -8,6 +8,8 @@ command -v update-monitors >/dev/null && update-monitors
 redshift -l51:-1 -t 6500:3000 &
 numlockx &
 
+xinput set-prop "TPPS/2 IBM TrackPoint" "libinput Accel Speed" 1.0 &
+
 ### Home specific exports
 udiskie & # -NT &
 xcompmgr &
