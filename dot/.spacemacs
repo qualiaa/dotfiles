@@ -652,12 +652,16 @@ dump.")
     (apply orig-func args))
   (advice-add 'org-create-formula-image :around #'org-renumber-environment))
 
+(defun fix/org-roam-buffer ()
+  (global-page-break-lines-mode -1))
+
 (defun dotspacemacs/user-config ()
   "Configuration for user code:
 This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
+  (fix/org-roam-buffer)
   ;; Do not save undo tree to files
   (with-eval-after-load 'undo-tree
     (setq undo-tree-auto-save-history nil))
