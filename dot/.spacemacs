@@ -58,7 +58,9 @@ This function should only modify configuration layer settings."
      ;; Text editing and note taking
      markdown
      (org :variables
-          org-enable-roam-support t)
+          org-enable-roam-support t
+          org-roam-enable-protocol t
+          org-roam-enable-ui t)
      deft
      bibtex
      ;; Development tools
@@ -609,7 +611,7 @@ dump.")
     (insert "\n\\end{equation*}\n"))
   (mathpix-screenshot))
 
-(defun fix-org-equation-tags ()
+(defun fix/org-equation-tags ()
   ;; https://kitchingroup.cheme.cmu.edu/blog/2016/11/07/Better-equation-numbering-in-LaTeX-fragments-in-org-mode/
   (defun org-renumber-environment (orig-func &rest args)
     (let ((results '())
@@ -652,12 +654,16 @@ dump.")
     (apply orig-func args))
   (advice-add 'org-create-formula-image :around #'org-renumber-environment))
 
+(defun fix/org-roam-buffer ()
+  (global-page-break-lines-mode -1))
+
 (defun dotspacemacs/user-config ()
   "Configuration for user code:
 This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
+  (fix/org-roam-buffer)
   ;; Do not save undo tree to files
   (with-eval-after-load 'undo-tree
     (setq undo-tree-auto-save-history nil))
@@ -672,37 +678,46 @@ before packages are loaded."
 
   (setq org-roam-directory (file-truename "~/org/notes")
         org-roam-db-location "~/.org-roam.db")
-  (spacemacs/declare-prefix "ar" "org-roam")
+  (org-roam-db-autosync-mode)
+
+  (spacemacs/declare-prefix
+    "ar" "org-roam"
+    "arD" "org-roam-dailies"
+    "art" "org-roam-tags")
   (spacemacs/set-leader-keys
-    "arr" 'org-roam-buffer-toggle
+    "arc" 'org-roam-capture
     "arf" 'org-roam-node-find
+    "arg" 'org-roam-graph
     "ari" 'jamie/org-roam-node-insert
-    "art" 'org-roam-dailies-find-today
-    "arg" 'org-roam-graph)
-  (spacemacs/declare-prefix-for-mode 'org-mode "mr" "org-roam")
+    "arl" 'org-roam-buffer-toggle
+    "ara" 'org-roam-alias-add
+    "aru" 'org-roam-ui-mode
+    "arDt" 'org-roam-dailies-goto-today
+    "arDy" 'org-roam-dailies-goto-yesterday
+    "arDT" 'org-roam-dailies-goto-tomorrow
+    "arDd" 'org-roam-dailies-goto-date
+    "arta" 'org-roam-tag-add
+    "artr" 'org-roam-tag-remove)
+
   (spacemacs/set-leader-keys-for-major-mode 'org-mode
-    "rr" 'org-roam
-    "rt" 'org-roam-dailies-today
-    "rf" 'org-roam-find-file
-    "ri" 'org-roam-insert
-    "rg" 'org-roam-graph)
+    "ri" 'jamie/org-roam-node-insert)
+
   (add-hook 'org-mode-hook 'spacemacs/toggle-auto-fill-mode-on)
   (evil-define-key 'insert org-mode-map (kbd "C-c i") 'jamie/org-roam-node-insert)
   (evil-define-key 'insert org-mode-map (kbd "C-c m") 'mathpix-screenshot)
   (evil-define-key 'insert org-mode-map (kbd "C-c M") 'jamie/mathpix-equation)
+  (add-hook 'org-roam-buffer-postrender-functions
+            (lambda () (org--latex-preview-region (point-min) (point-max))))
 
   ;; for org-roam-buffer-toggle
   ;; Use side-window like V1
   ;; This can take advantage of slots available with it
-  ;(add-to-list 'display-buffer-alist
-  ;             '("\\*org-roam\\*"
-  ;               (display-buffer-in-side-window)
-  ;               (side . right)
-  ;               (slot . 0)
-  ;               (window-width . 0.25)
-  ;               (preserve-size . (t nil))
-  ;               (window-parameters . ((no-other-window . t)
-  ;                                     (no-delete-other-windows . t)))))
+  (add-to-list 'display-buffer-alist
+               '("\\*org-roam\\*"
+                 (display-buffer-in-direction)
+                 (direction . right)
+                 (window-width . 0.33)
+                 (window-height . fit-window-to-buffer)))
 
   ;; Org-roam capture templates
   (setq org-roam-capture-templates
@@ -793,7 +808,7 @@ before packages are loaded."
                  ("\\section{%s}" . "\\section*{%s}")
                  ("\\subsection{%s}" . "\\subsection*{%s}")
                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
-  (fix-org-equation-tags)
+  (fix/org-equation-tags)
 
   (setq reftex-default-bibliography
         (list (concat (file-name-as-directory org-roam-directory) "references.bib")))
@@ -839,4 +854,5 @@ before packages are loaded."
    pytest-global-name "python -m pytest")
 
   (setenv "WORKON_HOME" "/home/jamie/.miniconda3/envs")
+  (pyvenv-activate "/home/jamie/.miniconda3")
 )
