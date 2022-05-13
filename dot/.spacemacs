@@ -609,7 +609,7 @@ dump.")
     (insert "\n\\end{equation*}\n"))
   (mathpix-screenshot))
 
-(defun fix-org-equation-tags ()
+(defun fix/org-equation-tags ()
   ;; https://kitchingroup.cheme.cmu.edu/blog/2016/11/07/Better-equation-numbering-in-LaTeX-fragments-in-org-mode/
   (defun org-renumber-environment (orig-func &rest args)
     (let ((results '())
@@ -793,7 +793,7 @@ before packages are loaded."
                  ("\\section{%s}" . "\\section*{%s}")
                  ("\\subsection{%s}" . "\\subsection*{%s}")
                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
-  (fix-org-equation-tags)
+  (fix/org-equation-tags)
 
   (setq reftex-default-bibliography
         (list (concat (file-name-as-directory org-roam-directory) "references.bib")))
