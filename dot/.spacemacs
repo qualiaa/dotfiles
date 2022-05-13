@@ -657,25 +657,8 @@ dump.")
 (defun fix/org-roam-buffer ()
   (global-page-break-lines-mode -1))
 
-(defun dotspacemacs/user-config ()
-  "Configuration for user code:
-This function is called at the very end of Spacemacs startup, after layer
-configuration.
-Put your configuration code here, except for variables that should be set
-before packages are loaded."
+(defun my/org-roam-config ()
   (fix/org-roam-buffer)
-  ;; Do not save undo tree to files
-  (with-eval-after-load 'undo-tree
-    (setq undo-tree-auto-save-history nil))
-
-  ;; Emacs window titles
-  (setq-default frame-title-format '("%f [%m]"))
-  ;; General coding settings
-  (remove-hook 'prog-mode-hook #'smartparens-mode)
-  (mapc (lambda (x) (add-hook x 'spacemacs/toggle-fill-column-indicator-on))
-        '(prog-mode-hook markdown-mode-hook org-mode-hook))
-  ;(spacemacs/toggle-smartparens-globally-off)
-
   (setq org-roam-directory (file-truename "~/org/notes")
         org-roam-db-location "~/.org-roam.db")
   (org-roam-db-autosync-mode)
@@ -750,8 +733,9 @@ before packages are loaded."
           deft-recursive t
           deft-use-filename-as-title nil
           deft-org-mode-title-prefix t
-          deft-markdown-mode-title-level 2))
+          deft-markdown-mode-title-level 2)))
 
+(defun my/org-config ()
   ;; Org settings
   (add-to-list 'recentf-exclude "/home/.+/org/.*")
   (with-eval-after-load 'org
@@ -810,15 +794,6 @@ before packages are loaded."
                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
   (fix/org-equation-tags)
 
-  (setq reftex-default-bibliography
-        (list (concat (file-name-as-directory org-roam-directory) "references.bib")))
-  (setq org-ref-default-bibliography reftex-default-bibliography
-        org-ref-pdf-directory "~/Documents/staging/")
-        ;org-ref-bibliography-notes "~/Papers/notes.org")
-  (require 'bibtex)
-  (bibtex-set-dialect 'biblatex)
-  (setq org-ref-label-use-font-lock nil)
-
   ; Add org-babel settings
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -839,7 +814,38 @@ before packages are loaded."
   ;; My own functions
   (spacemacs/set-leader-keys-for-major-mode 'org-mode
     "iv" 'jamie/latex-vectorify)
-  (evil-define-key 'insert org-mode-map (kbd "C-c v") 'jamie/latex-vectorify)
+  (evil-define-key 'insert org-mode-map (kbd "C-c v") 'jamie/latex-vectorify))
+
+(defun my/org-ref-config (&rest bibfiles)
+  (setq bibtex-completion-bibliography bibfiles
+        reftex-default-bibliography bibfiles
+        org-ref-default-bibliography bibfiles
+        bibtext-completion-library-path "~/Documents/staging/")
+  (require 'bibtex)
+  (bibtex-set-dialect 'biblatex)
+  (setq org-ref-label-use-font-lock nil))
+
+(defun dotspacemacs/user-config ()
+  "Configuration for user code:
+This function is called at the very end of Spacemacs startup, after layer
+configuration.
+Put your configuration code here, except for variables that should be set
+before packages are loaded."
+  ;; Do not save undo tree to files
+  (with-eval-after-load 'undo-tree
+    (setq undo-tree-auto-save-history nil))
+
+  ;; Emacs window titles
+  (setq-default frame-title-format '("%f [%m]"))
+  ;; General coding settings
+  (remove-hook 'prog-mode-hook #'smartparens-mode)
+  (mapc (lambda (x) (add-hook x 'spacemacs/toggle-fill-column-indicator-on))
+        '(prog-mode-hook markdown-mode-hook org-mode-hook))
+  ;(spacemacs/toggle-smartparens-globally-off)
+
+  (my/org-roam-config)
+  (my/org-config)
+  (my/org-ref-config (concat (file-name-as-directory org-roam-directory) "references.bib"))
 
   (setq-default
    ;; EVIL settings
