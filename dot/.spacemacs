@@ -40,6 +40,7 @@ This function should only modify configuration layer settings."
      gpu
      (haskell :variables haskell-completion-backend 'lsp)
      html
+     javascript
      perl5
      (python :variables
              python-backend 'lsp
