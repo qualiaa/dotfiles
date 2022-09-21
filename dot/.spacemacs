@@ -699,22 +699,22 @@ before packages are loaded."
   (setq org-roam-capture-templates
         '(("d" "default" plain
            "\nTags :: %?"
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
-                              "#+title: ${title}\n")
-           :unnarrowed t)
-          ("p" "private" plain
-           "\nTags :: %?"
-           :if-new (file+head "private/%<%Y%m%d%H%M%S>-${slug}.org"
+           :if-new (file+head "personal/%<%Y%m%d%H%M%S>-${slug}.org"
                               "#+title: ${title}\n")
            :unnarrowed t)
           ("s" "source" plain
-           "\nAuthor :: %?\nTitle :: \nURL :: \nTags :: "
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+           "\nAuthor :: %?\nDate :: \nURL :: \nTags :: "
+           :if-new (file+head "personal/%<%Y%m%d%H%M%S>-${slug}.org"
+                              "#+title: Notes on ${title}\n#+startup: latexpreview\n")
+           :unnarrowed t)
+          ("l" "luffy" plain
+           "\nTags :: %?"
+           :if-new (file+head "luffy/%<%Y%m%d%H%M%S>-${slug}.org"
                               "#+title: ${title}\n")
            :unnarrowed t)
           ("r" "recipe" plain
            "\nTags :: [[file:20210303214935-recipes.org][§recipes]] %?\nSource :: \nCourses :: \n\n* Ingredients\n\n - \n\n* Tools\n\n - \n\n* Instructions\n\n"
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+           :if-new (file+head "personal/%<%Y%m%d%H%M%S>-${slug}.org"
                               "#+title: ${title}\n")
            :unnarrowed t)))
 
@@ -825,5 +825,4 @@ before packages are loaded."
    pytest-project-root-files '("setup.py" ".projectile" ".git" ".hg" ".exercism")
    pytest-global-name "python -m pytest")
 
-  (setenv "WORKON_HOME" "/home/jamie/.miniconda3/envs")
-)
+  (setenv "WORKON_HOME" (file-truename "~/.anaconda3/envs")))

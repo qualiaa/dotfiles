@@ -55,11 +55,13 @@ for_window [title="amsynth"] floating enable, border none
 
 
 # Startup programs
-#exec steam
-#exec skype
+exec emacs
+exec nextcloud
+exec element-desktop
 
 # Start shortcuts
-bindsym $mod+Return exec i3-sensible-terminal
+#bindsym $mod+Return exec i3-sensible-terminal
+bindsym $mod+Return exec urxvt
 bindsym $mod+Control+Return exec "i3-msg \\"workspace 8:www; exec firefox\\""
 
 
@@ -79,7 +81,7 @@ bindsym $mod+Shift+q kill
 bindsym $mod+d exec dmenu_run
 
 # lock i3
-bindsym Control+$mod+l exec i3lock -t -f -i ~/.lockscreen/computer-misuse.png
+bindsym Control+$mod+l exec gdmflexiserver
 
 
 # WIP: wrapper for import screenshots
