@@ -977,8 +977,7 @@ if [ -n "$SSH_CLIENT" ]; then
     export PROMPT="%B%m%b $PROMPT"
 fi
 
-[ -f ~/.dircolors ] && eval `dircolors ~/.dircolors`
-
+[ -e ~/.dircolors ] && eval `dircolors ~/.dircolors`
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
