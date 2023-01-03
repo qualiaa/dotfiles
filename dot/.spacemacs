@@ -38,8 +38,9 @@ This function should only modify configuration layer settings."
      emacs-lisp
      lua
      gpu
-     (haskell :variables haskell-completion-backend 'lsp)
+     (haskell :variables haskell-completion-backend 'ghci)
      html
+     javascript
      perl5
      (python :variables
              python-backend 'lsp
@@ -71,7 +72,8 @@ This function should only modify configuration layer settings."
      git
      (helm :variables helm-enable-auto-resize t)
      ;ipython-notebook
-     lsp
+     (lsp :variables lsp-rust-server 'rust-analyzer
+                     cargo-process-reload-on-modify t)
      ;; UI
      multiple-cursors
      neotree

@@ -968,6 +968,7 @@ plugins=(ssh-agent
          docker)
 
 # User configuration
+source $HOME/.exports
 source $HOME/.aliases
 source $ZSH/oh-my-zsh.sh
 
@@ -977,12 +978,11 @@ if [ -n "$SSH_CLIENT" ]; then
     export PROMPT="%B%m%b $PROMPT"
 fi
 
-[ -f ~/.dircolors ] && eval `dircolors ~/.dircolors`
-
+[ -e ~/.dircolors ] && eval `dircolors ~/.dircolors`
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_dir="$HOME/.anaconda3"
+__conda_dir="$HOME/.miniconda3"
 __conda_setup="$("$__conda_dir/bin/conda" 'shell.zsh' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
