@@ -968,6 +968,7 @@ plugins=(ssh-agent
          docker)
 
 # User configuration
+source $HOME/.exports
 source $HOME/.aliases
 source $ZSH/oh-my-zsh.sh
 
