@@ -59,7 +59,9 @@ This function should only modify configuration layer settings."
      ;; Text editing and note taking
      markdown
      (org :variables
-          org-enable-roam-support t)
+          org-enable-roam-support t
+          org-roam-enable-protocol t
+          org-roam-enable-ui t)
      deft
      bibtex
      ;; Development tools
@@ -95,7 +97,8 @@ This function should only modify configuration layer settings."
    dotspacemacs-additional-packages
    '(bnf-mode
      ripgrep
-     (mathpix :location (recipe :fetcher github :repo "jethrokuan/mathpix.el")))
+     (mathpix :location (recipe :fetcher github :repo "jethrokuan/mathpix.el"))
+     (pico8-mode :location (recipe :fetcher github :repo "Kaali/pico8-mode")))
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -593,9 +596,14 @@ dump.")
   (let ((start-point (point)))
     (org-roam-node-insert filter-fn)
     (save-excursion
-      (goto-char start-point)
-      (when (search-forward "\]\[" nil t)
-        (insert "§")))))
+      (cond
+       ((char-equal (char-before) ?\])
+        (when (search-backward "\]\[" nil t)
+          (forward-char 2)
+          (insert "§")))
+       ((char-equal (char-after) ?\[)
+        (when (search-forward "\]\[" nil t)
+          (insert "§")))))))
 
 (defun jamie/mathpix-equation (&optional filter-fn)
   (interactive)
@@ -604,7 +612,7 @@ dump.")
     (insert "\n\\end{equation*}\n"))
   (mathpix-screenshot))
 
-(defun fix-org-equation-tags ()
+(defun fix/org-equation-tags ()
   ;; https://kitchingroup.cheme.cmu.edu/blog/2016/11/07/Better-equation-numbering-in-LaTeX-fragments-in-org-mode/
   (defun org-renumber-environment (orig-func &rest args)
     (let ((results '())
@@ -647,53 +655,53 @@ dump.")
     (apply orig-func args))
   (advice-add 'org-create-formula-image :around #'org-renumber-environment))
 
-(defun dotspacemacs/user-config ()
-  "Configuration for user code:
-This function is called at the very end of Spacemacs startup, after layer
-configuration.
-Put your configuration code here, except for variables that should be set
-before packages are loaded."
-  ;; Emacs window titles
-  (setq-default frame-title-format '("%f [%m]"))
-  ;; General coding settings
-  (remove-hook 'prog-mode-hook #'smartparens-mode)
-  (mapc (lambda (x) (add-hook x 'spacemacs/toggle-fill-column-indicator-on))
-        '(prog-mode-hook markdown-mode-hook org-mode-hook))
-  ;(spacemacs/toggle-smartparens-globally-off)
+(defun fix/org-roam-buffer ()
+  (global-page-break-lines-mode -1))
 
+(defun my/org-roam-config ()
+  (fix/org-roam-buffer)
   (setq org-roam-directory (file-truename "~/org/notes")
         org-roam-db-location "~/.org-roam.db")
-  (spacemacs/declare-prefix "ar" "org-roam")
+  (org-roam-db-autosync-mode)
+
+  (spacemacs/declare-prefix
+    "ar" "org-roam"
+    "arD" "org-roam-dailies"
+    "art" "org-roam-tags")
   (spacemacs/set-leader-keys
-    "arr" 'org-roam-buffer-toggle
+    "arc" 'org-roam-capture
     "arf" 'org-roam-node-find
+    "arg" 'org-roam-graph
     "ari" 'jamie/org-roam-node-insert
-    "art" 'org-roam-dailies-find-today
-    "arg" 'org-roam-graph)
-  (spacemacs/declare-prefix-for-mode 'org-mode "mr" "org-roam")
+    "arl" 'org-roam-buffer-toggle
+    "ara" 'org-roam-alias-add
+    "aru" 'org-roam-ui-mode
+    "arDt" 'org-roam-dailies-goto-today
+    "arDy" 'org-roam-dailies-goto-yesterday
+    "arDT" 'org-roam-dailies-goto-tomorrow
+    "arDd" 'org-roam-dailies-goto-date
+    "arta" 'org-roam-tag-add
+    "artr" 'org-roam-tag-remove)
+
   (spacemacs/set-leader-keys-for-major-mode 'org-mode
-    "rr" 'org-roam
-    "rt" 'org-roam-dailies-today
-    "rf" 'org-roam-find-file
-    "ri" 'org-roam-insert
-    "rg" 'org-roam-graph)
+    "ri" 'jamie/org-roam-node-insert)
+
   (add-hook 'org-mode-hook 'spacemacs/toggle-auto-fill-mode-on)
   (evil-define-key 'insert org-mode-map (kbd "C-c i") 'jamie/org-roam-node-insert)
   (evil-define-key 'insert org-mode-map (kbd "C-c m") 'mathpix-screenshot)
   (evil-define-key 'insert org-mode-map (kbd "C-c M") 'jamie/mathpix-equation)
+  (add-hook 'org-roam-buffer-postrender-functions
+            (lambda () (org--latex-preview-region (point-min) (point-max))))
 
   ;; for org-roam-buffer-toggle
   ;; Use side-window like V1
   ;; This can take advantage of slots available with it
-  ;(add-to-list 'display-buffer-alist
-  ;             '("\\*org-roam\\*"
-  ;               (display-buffer-in-side-window)
-  ;               (side . right)
-  ;               (slot . 0)
-  ;               (window-width . 0.25)
-  ;               (preserve-size . (t nil))
-  ;               (window-parameters . ((no-other-window . t)
-  ;                                     (no-delete-other-windows . t)))))
+  (add-to-list 'display-buffer-alist
+               '("\\*org-roam\\*"
+                 (display-buffer-in-direction)
+                 (direction . right)
+                 (window-width . 0.33)
+                 (window-height . fit-window-to-buffer)))
 
   ;; Org-roam capture templates
   (setq org-roam-capture-templates
@@ -713,19 +721,22 @@ before packages are loaded."
                               "#+title: ${title}\n")
            :unnarrowed t)
           ("r" "recipe" plain
-           "\nTags :: [[file:20210303214935-recipes.org][§recipes]] %?\nSource :: \nCourses :: \n\n* Ingredients\n\n - \n\n* Tools\n\n - \n\n* Instructions\n\n"
+           "\nTags :: [[file:20210303214935-recipes.org][§recipes]] %?\nSource :: \nDiet :: \nCourses :: \nServes :: \nPrep Time :: \nCook Time :: \n\n* Ingredients\n\n - \n\n* Tools\n\n - \n\n* Instructions\n\n"
            :if-new (file+head "personal/%<%Y%m%d%H%M%S>-${slug}.org"
                               "#+title: ${title}\n")
            :unnarrowed t)))
 
   ;; Deft settings
+  ;; TODO: Modify deft-strip-summary-regex to handle property drawers.
+  ;;       See: https://jblevins.org/projects/deft/
   (with-eval-after-load 'deft
     (setq deft-directory org-roam-directory
           deft-recursive t
           deft-use-filename-as-title nil
           deft-org-mode-title-prefix t
-          deft-markdown-mode-title-level 2))
+          deft-markdown-mode-title-level 2)))
 
+(defun my/org-config ()
   ;; Org settings
   (add-to-list 'recentf-exclude "/home/.+/org/.*")
   (with-eval-after-load 'org
@@ -744,6 +755,7 @@ before packages are loaded."
 
       ;; Rendering
       org-bullets-bullet-list '("○" "◉" "✿" "✸")
+      org-latex-create-formula-image-program 'dvisvgm
       org-preview-latex-default-process 'dvisvgm
       org-format-latex-options (append '(:scale 1.5) org-format-latex-options)
 
@@ -758,6 +770,7 @@ before packages are loaded."
 
       org-latex-listings 'minted
       org-latex-packages-alist '(("" "setspace")
+                                 ("" "amsmath")
                                  ("" "enumerate")
                                  ("utf8" "inputenc")
                                  ;("a4paper,left=1.75in,right=1in,top=1in,bottom=2.2in" "geometry")
@@ -765,13 +778,12 @@ before packages are loaded."
                                  ("" "bm" t)
                                  ("" "xcolor")
                                  ("" "cleveref")
-                                 ("activate={true,nocompatibility},final,tracking=true,kerning=true,spacing=true" "microtype")
                                  ("" "mathpazo" t)
                                  ("scaled" "helvet" t)
                                  ("scaled=0.85" "beramono" t)
                                  ("" "minted"))
-      org-latex-pdf-process '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-                              "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f")
+      org-latex-pdf-process '("lualatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+                              "lualatex -shell-escape -interaction nonstopmode -output-directory %o %f")
 
       )
     (org-toggle-pretty-entities))
@@ -781,22 +793,14 @@ before packages are loaded."
                  ("\\section{%s}" . "\\section*{%s}")
                  ("\\subsection{%s}" . "\\subsection*{%s}")
                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
-  (fix-org-equation-tags)
-
-  (setq reftex-default-bibliography
-        (list (concat (file-name-as-directory org-roam-directory) "references.bib")))
-  (setq org-ref-default-bibliography reftex-default-bibliography
-        org-ref-pdf-directory "~/Documents/staging/")
-        ;org-ref-bibliography-notes "~/Papers/notes.org")
-  (require 'bibtex)
-  (bibtex-set-dialect 'biblatex)
-  (setq org-ref-label-use-font-lock nil)
+  (fix/org-equation-tags)
 
   ; Add org-babel settings
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((emacs-lisp . t)
      (org . t)
+     (latex . t)
      (lilypond . t)))
   ;(add-to-list 'org-babel-default-header-args:lilypond-user
   ;             '(:prologue . "\\paper{
@@ -811,7 +815,38 @@ before packages are loaded."
   ;; My own functions
   (spacemacs/set-leader-keys-for-major-mode 'org-mode
     "iv" 'jamie/latex-vectorify)
-  (evil-define-key 'insert org-mode-map (kbd "C-c v") 'jamie/latex-vectorify)
+  (evil-define-key 'insert org-mode-map (kbd "C-c v") 'jamie/latex-vectorify))
+
+(defun my/org-ref-config (&rest bibfiles)
+  (setq bibtex-completion-bibliography bibfiles
+        reftex-default-bibliography bibfiles
+        org-ref-default-bibliography bibfiles
+        bibtext-completion-library-path "~/Documents/staging/")
+  (require 'bibtex)
+  (bibtex-set-dialect 'biblatex)
+  (setq org-ref-label-use-font-lock nil))
+
+(defun dotspacemacs/user-config ()
+  "Configuration for user code:
+This function is called at the very end of Spacemacs startup, after layer
+configuration.
+Put your configuration code here, except for variables that should be set
+before packages are loaded."
+  ;; Do not save undo tree to files
+  (with-eval-after-load 'undo-tree
+    (setq undo-tree-auto-save-history nil))
+
+  ;; Emacs window titles
+  (setq-default frame-title-format '("%f [%m]"))
+  ;; General coding settings
+  (remove-hook 'prog-mode-hook #'smartparens-mode)
+  (mapc (lambda (x) (add-hook x 'spacemacs/toggle-fill-column-indicator-on))
+        '(prog-mode-hook markdown-mode-hook org-mode-hook))
+  ;(spacemacs/toggle-smartparens-globally-off)
+
+  (my/org-roam-config)
+  (my/org-config)
+  (my/org-ref-config (concat (file-name-as-directory org-roam-directory) "references.bib"))
 
   (setq-default
    ;; EVIL settings
@@ -825,4 +860,5 @@ before packages are loaded."
    pytest-project-root-files '("setup.py" ".projectile" ".git" ".hg" ".exercism")
    pytest-global-name "python -m pytest")
 
-  (setenv "WORKON_HOME" (file-truename "~/.anaconda3/envs")))
+  (setenv "WORKON_HOME" "/home/jamie/.miniconda3/envs")
+)

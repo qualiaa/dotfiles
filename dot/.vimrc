@@ -36,7 +36,6 @@ Plugin 'majutsushi/tagbar'
 
 " Code completion and error reporting
 Plugin 'scrooloose/syntastic'
-Plugin 'ycm-core/YouCompleteMe'
 
 " C/C++
 Plugin 'a.vim'
