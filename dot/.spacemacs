@@ -774,8 +774,9 @@ dump.")
       org-latex-listings 'minted
       org-latex-packages-alist '(("" "setspace")
                                  ("" "amsmath")
-                                 ("" "enumerate")
-                                 ("utf8" "inputenc")
+                                 ;("" "enumerate")
+                                 ;("" "parskip")
+                                 ;("utf8" "inputenc")
                                  ;("a4paper,left=1.75in,right=1in,top=1in,bottom=2.2in" "geometry")
                                  ("" "xfrac" t)
                                  ("" "bm" t)
@@ -785,14 +786,24 @@ dump.")
                                  ("scaled" "helvet" t)
                                  ("scaled=0.85" "beramono" t)
                                  ("" "minted"))
-      org-latex-pdf-process '("lualatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-                              "lualatex -shell-escape -interaction nonstopmode -output-directory %o %f")
-
+      org-latex-pdf-process '("latexmk -lualatex -shell-escape -interaction=nonstopmode -output-directory=%o %f")
       )
     (org-toggle-pretty-entities))
   (add-to-list 'org-latex-classes
                '("luffyreport"
                  "\\documentclass{luffyreport}"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+  (add-to-list 'org-latex-classes
+               '("luffywhitepaper"
+                 "\\documentclass{luffywhitepaper}"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+  (add-to-list 'org-latex-classes
+               '("luffywhitepaper"
+                 "\\documentclass{luffywhitepaper}"
                  ("\\section{%s}" . "\\section*{%s}")
                  ("\\subsection{%s}" . "\\subsection*{%s}")
                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
