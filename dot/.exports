@@ -3,6 +3,7 @@ path_add() {
     [ -d "$1" ] && PATH="$1:$PATH"
 }
 
+[ -f "$HOME/.ghcup/env" ] && source "$HOME/.ghcup/env" # ghcup-env
 path_add "$JAVA_HOME"
 path_add "$HOME/usr/bin"
 path_add "$HOME/bin"
