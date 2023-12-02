@@ -72,8 +72,7 @@ URxvt*cursorBlink:                    true
 ! URxvt*pointerColor2:                  color
 ! URxvt*borderColor:                    color
 ! URxvt*iconFile:                       file
-URxvt*font: xft:Inconsolata for Powerline:size=14,xft:Bitstream Vera Sans Mono:Regular:size=12,xft:Noto Sans Mono:Regular:size=12
-
+URxvt*font: xft:Inconsolata for Powerline:size=14,xft:BQN386 Unicode:Regular,xft:Bitstream Vera Sans Mono:Regular:size=12,xft:Noto Sans Mono:Regular:size=12
 ! URxvt*font:                           xft:Ubuntu Mono:Regular:size=12
 ! URxvt*font: xft: artwiz lime
 ! URxvt*boldFont:                       fontname
