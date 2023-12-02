@@ -22,6 +22,7 @@ application/x-extension-xht=firefox.desktop
 x-scheme-handler/postman=Postman.desktop
 x-scheme-handler/msteams=teams.desktop
 x-scheme-handler/org-protocol=org-protocol.desktop
+image/svg+xml=org.inkscape.Inkscape.desktop
 
 [Added Associations]
 image/gif=sxiv.desktop;
@@ -30,3 +31,4 @@ video/mp4=vlc.desktop;
 image/jpeg=org.gnome.eog.desktop;gimp.desktop;okularApplication_kimgio.desktop;
 text/plain=org.gnome.gedit.desktop;
 application/pdf=org.pwmt.zathura-pdf-mupdf.desktop;
+image/svg+xml=org.inkscape.Inkscape.desktop;
