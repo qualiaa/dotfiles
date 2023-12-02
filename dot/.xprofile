@@ -7,4 +7,4 @@ command -v update-monitors >/dev/null && update-monitors
 
 redshift -l51:-1 -t 6500:3000 &
 numlockx &
-
+nm-applet &
