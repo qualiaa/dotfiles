@@ -901,5 +901,5 @@ before packages are loaded."
    pytest-global-name "python -m pytest")
 
   (setenv "WORKON_HOME" "/home/jamie/.miniconda3/envs")
-  (pyvenv-activate "/home/jamie/.miniconda3")
+  ;(pyvenv-activate "/home/jamie/.miniconda3")
 )
