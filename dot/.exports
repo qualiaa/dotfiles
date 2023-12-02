@@ -4,8 +4,6 @@ path_add() {
 
 ### Home specific exports
 
-[ -f "$HOME/.ghcup/env" ] && source "$HOME/.ghcup/env" # ghcup-env
-
 # Java
 export JAVA_HOME=/usr/lib/jvm/java-13-openjdk
 # Poetry
@@ -19,6 +17,7 @@ path_add "$IDF_PATH/tools"
 
 
 ### General settings
+[ -f "$HOME/.ghcup/env" ] && source "$HOME/.ghcup/env" # ghcup-env
 path_add "$JAVA_HOME"
 path_add "$HOME/usr/bin"
 path_add "$HOME/bin"
