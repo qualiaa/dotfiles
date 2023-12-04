@@ -1,11 +1,7 @@
 #!/bin/bash
 
-BUILTIN=eDP1
-DP=DP1
-HDMI=HDMI2
-HUB_A=DP1-1
-HUB_B=DP1-2
-
+LEFT=HDMI-2
+RIGHT=DP-0
 
 readonly I3_CONFIG="$HOME/.config/i3/config"
 
@@ -23,41 +19,10 @@ workspace 10:music output ${2:-$1}
 EOF
 }
 
-readonly connected=$(xrandr --current | grep " connected" | cut -d' ' -f1)
-
-have() {
-    grep -q "^$1$" <<<"$connected"
-}
-
-if have $DP && have $HDMI; then
-    # Hack to fix broken DisplayPort on my machine...
-    xrandr --output $DP --off
-    sleep 2
-
-    xrandr \
-        --output $BUILTIN --off \
-        --output $HDMI --auto --primary \
-        --output $DP --auto --right-of $HDMI
-    set-side-monitor "$DP"
-elif have $HUB_A && have $HUB_B; then
-    xrandr \
-        --output $BUILTIN --auto \
-        --output $HUB_A --auto --right-of $BUILTIN --primary \
-        --output $HUB_B --auto --right-of $HUB_A
-    set-side-monitor "$HUB_B" "$BUILTIN"
-elif have $HDMI; then
-    xrandr \
-        --output $BUILTIN --auto \
-        --output $HDMI --auto --primary --right-of $BUILTIN \
-        --output $DP --off
-    set-side-monitor "$BUILTIN"
-else
-    xrandr \
-        --output $BUILTIN --auto --primary \
-        --output $HDMI --off \
-        --output $DP --off
-    set-side-monitor primary
-fi
+xrandr \
+    --output $LEFT --auto --primary \
+    --output $RIGHT --auto --right-of $LEFT --rotate left
+set-side-monitor "$RIGHT"
 
 # Reload i3 if already started
 { pgrep -x i3 && i3-msg reload ; } >/dev/null 
