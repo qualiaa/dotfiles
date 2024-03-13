@@ -36,7 +36,7 @@ assign [class="Skype"] 9:comms
 assign [class="Slack"] 9:comms
 assign [class="Element"] 9:comms
 assign [class="discord"] 9:comms
-assign [class="Clementine"] 10:music
+assign [class="Strawberry"] 10:music
 assign [class="Spotify"] 10:music
 
 # Additional settings
@@ -76,7 +76,7 @@ bindsym $mod+u [urgent="latest"] focus
 bindsym $mod+Shift+q kill
 
 # start dmenu
-bindsym $mod+d exec dmenu_run
+bindsym $mod+d exec rofi -show combi
 
 # lock i3
 bindsym Control+$mod+l exec i3lock -t -f -i ~/.lockscreen/computer-misuse.png
