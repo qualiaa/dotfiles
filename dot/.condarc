@@ -10,7 +10,7 @@ create_default_packages:
   - flake8
   - poetry
   - ipython
-  - ptvsd>=4.2
+  - debugpy
   - epc
   - python-lsp-server[all]
   - black
