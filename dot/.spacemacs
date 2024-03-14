@@ -41,6 +41,7 @@ This function should only modify configuration layer settings."
      (haskell :variables haskell-completion-backend 'lsp)
      html
      javascript
+     nixos
      perl5
      (python :variables
              python-backend 'lsp
@@ -585,7 +586,6 @@ This function defines the environment variables for your Emacs session. By
 default it calls `spacemacs/load-spacemacs-env' which loads the environment
 variables declared in `~/.spacemacs.env' or `~/.spacemacs.d/.spacemacs.env'.
 See the header of this file for more information."
-  (spacemacs/load-spacemacs-env)
 )
 
 (defun dotspacemacs/user-init ()
@@ -893,7 +893,5 @@ before packages are loaded."
    ;; Python settings
    pytest-project-root-files '("setup.py" ".projectile" ".git" ".hg" ".exercism")
    pytest-global-name "python -m pytest")
-
-  (setenv "WORKON_HOME" "/home/jamie/.miniconda3/envs")
-  ;(pyvenv-activate "/home/jamie/.miniconda3")
+  (message "User configuration done")
 )
