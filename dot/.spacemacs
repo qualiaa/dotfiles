@@ -53,6 +53,7 @@ This function should only modify configuration layer settings."
      csv
      json
      protobuf
+     sql
      yaml
      ;; Other configuration
      nginx
