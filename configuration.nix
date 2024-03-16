@@ -131,7 +131,7 @@
     networkmanager-openvpn
     networkmanagerapplet
     bluez
-    
+
     ## File sync & Backup
     restic
     nextcloud-client
@@ -201,7 +201,7 @@
     Host gh
       Hostname github.com
       User git
-    
+
     Host crucible
       Hostname crucible.luffy.ai
       User git
@@ -241,7 +241,7 @@
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
-  networking.firewall.allowedTCPPortRanges = [ 
+  networking.firewall.allowedTCPPortRanges = [
     { from = 5757; to = 5768; }
   ];
   # networking.firewall.allowedUDPPorts = [ ... ];
