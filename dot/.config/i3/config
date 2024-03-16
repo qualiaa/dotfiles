@@ -1,5 +1,5 @@
 set $mod Mod4
-set $audio_player clementine
+set $audio_player strawberry
 
 floating_modifier $mod
 
