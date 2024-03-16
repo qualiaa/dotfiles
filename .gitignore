@@ -1,5 +1,6 @@
 dot/.config/*
 !dot/.config/fontconfig
+!dot/.config/dunst
 !dot/.config/i3
 !dot/.config/i3status
 !dot/.config/redshift
