@@ -170,8 +170,10 @@
 
     ## Utilities
     dunst
+    libnotify
     numlockx
     pavucontrol
+    pulseaudio-ctl
     (redshift.override { withGeolocation = false; })
     zsh
 
