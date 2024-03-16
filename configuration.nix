@@ -64,6 +64,11 @@
     xkb.options = "caps:escape";
   };
 
+  services.xserver.libinput.touchpad = {
+    naturalScrolling = true;
+    disableWhileTyping = true;
+  };
+
   # Configure console keymap
   console.keyMap = "uk";
 
