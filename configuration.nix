@@ -14,13 +14,17 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  boot.initrd.luks.devices."luks-24dc2aad-a0de-4412-bd1e-3ccf96550e8b".device = "/dev/disk/by-uuid/24dc2aad-a0de-4412-bd1e-3ccf96550e8b";
-  networking.hostName = "jamie-xps-nixos";
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  boot.initrd.luks.devices = {
+    crypted = {
+      device = "/dev/disk/by-uuid/eb3ca2b8-f17b-4468-ae9c-33bd4114572c";
+      preLVM = true;
+    };
+  };
 
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
+  fileSystems."/".options = [ "compress=lzo" "noatime" ];
+  fileSystems."/home".options = [ "compress=lzo" "noatime" ];
+
+  networking.hostName = "jamie-fw-nixos";
 
   # Enable networking
   networking.networkmanager.enable = true;
