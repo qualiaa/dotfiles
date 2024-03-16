@@ -1,0 +1,10 @@
+[global]
+follow = mouse
+
+frame_width = 2
+gap_size = 2
+corner_radius = 5
+
+sort = false
+
+dmenu = rofi -dmenu -p dunst
