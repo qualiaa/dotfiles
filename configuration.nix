@@ -170,6 +170,7 @@
 
     ## Utilities
     dunst
+    numlockx
     pavucontrol
     (redshift.override { withGeolocation = false; })
     zsh
