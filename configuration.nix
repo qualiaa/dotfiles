@@ -155,6 +155,11 @@
     gimp
     inkscape
 
+    # Viewers
+    feh
+    zathura
+    vlc
+
     ## Fonts
     inconsolata  # FIXME: this package doesn't add inconsolata to fc-cache
     powerline-fonts
@@ -175,7 +180,6 @@
 
     # CLI tools
     comma
-    feh
     fzf
     p7zip
     pandoc
@@ -186,7 +190,6 @@
     xsel
     xorg.xev
     xorg.xprop
-    zathura
     zenith
   ];
 
