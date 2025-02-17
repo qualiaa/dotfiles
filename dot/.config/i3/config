@@ -18,7 +18,7 @@ gaps inner 20
 
 # Font
 # (good for high dpi)
-font pango:Noto Mono 8
+font pango:Noto Mono 12
 # (good for low dpi)
 #font pango:lime 8
 #font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
@@ -84,7 +84,7 @@ bindsym Control+$mod+l exec i3lock -t -f -i ~/.lockscreen/computer-misuse.png
 
 
 # WIP: wrapper for import screenshots
-# bindsym Print exec /home/jamie/bin/screenshot -window root
+bindsym Print exec scrot /home/jamie/screenshot.png
 
 # brightness
 bindsym XF86MonBrightnessDown exec /home/jamie/usr/bin/brightness -b -t 0.2 -5
@@ -210,5 +210,5 @@ bar {
         focused_workspace $c7 $c7 $c0
         urgent_workspace $c1 $c9 $c0
     }
-    font -artwiz-lime-medium-r-normal-*-10-*-*-*-*-*-*-*
+    font pango:Inconsolata Bold 14
 }
