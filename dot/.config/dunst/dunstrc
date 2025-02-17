@@ -7,4 +7,5 @@ corner_radius = 5
 sort = false
 
 font = Inconsolata 14
+
 dmenu = rofi -dmenu -p dunst
