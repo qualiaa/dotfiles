@@ -20,3 +20,4 @@ export CXX=g++
 export LC_COLLATE=C
 export TERMINAL=urxvt
 export TEXMFHOME="$HOME/.texmf"
+export BAT_THEME="Solarized (light)"
