@@ -953,19 +953,30 @@ ZSH_THEME="robbyrussell"
 zstyle :omz:plugins:ssh-agent identities $(
 grep -ERl -- "^-----BEGIN .+ PRIVATE KEY-----$" ~/.ssh  | xargs -n1 basename | tr '\n' ' ')
 
-plugins=(ssh-agent
-         zsh-syntax-highlighting
-         zsh-autosuggestions
-         zsh-completions
-         colorize
-         colored-man-pages
-         fzf
-         git
-         cabal
-         stack
-         gcloud
-         aws
-         docker)
+plugins=(
+    # SSH Key management
+    ssh-agent
+    colorize
+    colored-man-pages
+    fzf
+
+    # Environment management
+    direnv
+
+    # Tool completions
+    aws
+    cabal
+    docker
+    gcloud
+    git
+    rust
+    stack
+
+    # Extra zsh-users plugins: https://github.com/zsh-users
+    zsh-syntax-highlighting
+    zsh-autosuggestions
+    zsh-completions
+)
 
 # User configuration
 source $HOME/.exports

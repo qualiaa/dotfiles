@@ -43,6 +43,10 @@ if command-exists docker; then
 fi
 
 
+if command-exists nix-shell; then
+    alias nix-zsh='nix-shell --run zsh'
+fi
+
 command-exists jack_control && alias jack='jack_control'
 command-exists bluetoothctl && alias bluez="bluetoothctl"
 
