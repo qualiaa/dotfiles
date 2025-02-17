@@ -784,6 +784,9 @@ dump."
     (require 'mathpix)
     (require 'org-checklist)
     (setq
+     ;; UX
+     org-cycle-emulate-tab nil
+
      ;; TODO settings
      org-todo-keywords '((sequence "TODO" "DOING" "VERIFY" "|" "DONE"))
      org-todo-keyword-faces '(("DOING" . "orange") ("VERIFY" . "blue"))
