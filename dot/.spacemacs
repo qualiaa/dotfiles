@@ -852,7 +852,9 @@ dump."
    'org-babel-load-languages
    '((emacs-lisp . t)
      (org . t)
+     (shell . t)
      (latex . t)
+     (python . t)
      (lilypond . t)))
                                         ;(add-to-list 'org-babel-default-header-args:lilypond-user
                                         ;             '(:prologue . "\\paper{
