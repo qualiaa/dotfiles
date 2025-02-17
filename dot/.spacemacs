@@ -766,6 +766,17 @@ dump."
           deft-org-mode-title-prefix t
           deft-markdown-mode-title-level 2)))
 
+
+
+(defun my/set-hyperref-opts (packages-alist new-opts)
+  (mapcar
+   (lambda (elem)
+     (if (string= (cadr elem) "hyperref")
+         (cons (concat new-opts "," (car elem)) (cdr elem))
+       elem))
+   packages-alist))
+
+
 (defun my/org-config ()
   ;; Org settings
   (add-to-list 'recentf-exclude "/home/.+/org/.*")
@@ -799,6 +810,9 @@ dump."
                               "* %?\nEntered on %U\n  %i\n  %a"))
 
      org-latex-listings 'minted
+
+     org-latex-default-packages-alist (my/set-hyperref-opts org-latex-default-packages-alist
+                                                            "colorlinks=true,citecolor=blue!85!white,linkcolor=green!30!black")
 
      org-latex-packages-alist '(("" "setspace")
                                 ("" "minted")
