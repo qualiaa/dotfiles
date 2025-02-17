@@ -73,20 +73,20 @@ This function should only modify configuration layer settings."
      docker
      git
      (helm :variables helm-enable-auto-resize t)
-     ;ipython-notebook
+                                        ;ipython-notebook
      (lsp :variables lsp-rust-server 'rust-analyzer
-                     cargo-process-reload-on-modify t)
+          cargo-process-reload-on-modify t)
      ;; UI
      multiple-cursors
      neotree
      themes-megapack
-     ;treemacs
-     ;(shell :variables
-     ;       shell-default-height 30
-     ;       shell-default-position 'bottom)
-     ;spell-checking
-     ;syntax-checking
-     ;version-control
+                                        ;treemacs
+                                        ;(shell :variables
+                                        ;       shell-default-height 30
+                                        ;       shell-default-position 'bottom)
+                                        ;spell-checking
+                                        ;syntax-checking
+                                        ;version-control
      )
 
    ;; List of additional packages that will be installed without being wrapped
@@ -98,12 +98,13 @@ This function should only modify configuration layer settings."
    ;; `:location' property: '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages '(
-     bnf-mode
-     ripgrep
-     (mathpix :location (recipe :fetcher github :repo "jethrokuan/mathpix.el"))
-     (bqn-mode :location (recipe :fetcher github :repo "museoa/bqn-mode"))
-     (pico8-mode :location (recipe :fetcher github :repo "Kaali/pico8-mode"))
-   )
+                                      bnf-mode
+                                      ripgrep
+                                      direnv
+                                      (mathpix :location (recipe :fetcher github :repo "jethrokuan/mathpix.el"))
+                                      (bqn-mode :location (recipe :fetcher github :repo "museoa/bqn-mode"))
+                                      (pico8-mode :location (recipe :fetcher github :repo "Kaali/pico8-mode"))
+                                      )
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -460,12 +461,12 @@ It should only modify the values of Spacemacs settings."
    ;; When used in a plist, `visual' takes precedence over `relative'.
    ;; (default nil)
    dotspacemacs-line-numbers '(:relative t
-                               :disabled-for-modes dired-mode
-                                                   doc-view-mode
-                                                   markdown-mode
-                                                   org-mode
-                                                   pdf-view-mode
-                                                   text-mode)
+                                         :disabled-for-modes dired-mode
+                                         doc-view-mode
+                                         markdown-mode
+                                         org-mode
+                                         pdf-view-mode
+                                         text-mode)
 
    ;; Code folding method. Possible values are `evil', `origami' and `vimish'.
    ;; (default 'evil)
@@ -587,7 +588,8 @@ This function defines the environment variables for your Emacs session. By
 default it calls `spacemacs/load-spacemacs-env' which loads the environment
 variables declared in `~/.spacemacs.env' or `~/.spacemacs.d/.spacemacs.env'.
 See the header of this file for more information."
-)
+  (spacemacs/load-spacemacs-env)
+  )
 
 (defun dotspacemacs/user-init ()
   "Initialization for user code:
@@ -595,7 +597,7 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
-  ; stop custom file
+  ;; stop custom file
   (unless (boundp 'recentf-exclude)
     (setq recentf-exclude '()))
   (add-to-list 'recentf-exclude "/tmp/garbo.*")
@@ -609,7 +611,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 This function is called only while dumping Spacemacs configuration. You can
 `require' or `load' the libraries of your choice that will be included in the
 dump."
-)
+  )
 
 ;;; TODO Move into custom library
 (defun jamie/latex-vectorify ()
@@ -649,31 +651,31 @@ dump."
           (numberp))
 
       (setq results (cl-loop for (begin .  env) in
-                          (org-element-map (org-element-parse-buffer) 'latex-environment
-                            (lambda (env)
-                              (cons
-                               (org-element-property :begin env)
-                               (org-element-property :value env))))
-                          collect
-                          (cond
-                           ((and (string-match "\\\\begin{equation}" env)
-                                 (not (string-match "\\\\tag{" env)))
-                            (cl-incf counter)
-                            (cons begin counter))
-                           ((string-match "\\\\begin{align}" env)
-                            (prog2
-                                (cl-incf counter)
-                                (cons begin counter)
-                              (with-temp-buffer
-                                (insert env)
-                                (goto-char (point-min))
-                                ;; \\ is used for a new line. Each one leads to a number
-                                (cl-incf counter (count-matches "\\\\$"))
-                                ;; unless there are nonumbers.
-                                (goto-char (point-min))
-                                (cl-decf counter (count-matches "\\nonumber")))))
-                           (t
-                            (cons begin nil)))))
+                             (org-element-map (org-element-parse-buffer) 'latex-environment
+                               (lambda (env)
+                                 (cons
+                                  (org-element-property :begin env)
+                                  (org-element-property :value env))))
+                             collect
+                             (cond
+                              ((and (string-match "\\\\begin{equation}" env)
+                                    (not (string-match "\\\\tag{" env)))
+                               (cl-incf counter)
+                               (cons begin counter))
+                              ((string-match "\\\\begin{align}" env)
+                               (prog2
+                                   (cl-incf counter)
+                                   (cons begin counter)
+                                 (with-temp-buffer
+                                   (insert env)
+                                   (goto-char (point-min))
+                                   ;; \\ is used for a new line. Each one leads to a number
+                                   (cl-incf counter (count-matches "\\\\$"))
+                                   ;; unless there are nonumbers.
+                                   (goto-char (point-min))
+                                   (cl-decf counter (count-matches "\\nonumber")))))
+                              (t
+                               (cons begin nil)))))
 
       (when (setq numberp (cdr (assoc (point) results)))
         (setf (car args)
@@ -765,6 +767,17 @@ dump."
           deft-org-mode-title-prefix t
           deft-markdown-mode-title-level 2)))
 
+
+
+(defun my/set-hyperref-opts (packages-alist new-opts)
+  (mapcar
+   (lambda (elem)
+     (if (string= (cadr elem) "hyperref")
+         (cons (concat new-opts "," (car elem)) (cdr elem))
+       elem))
+   packages-alist))
+
+
 (defun my/org-config ()
   ;; Org settings
   (add-to-list 'recentf-exclude "/home/.+/org/.*")
@@ -772,48 +785,57 @@ dump."
     (require 'mathpix)
     (require 'org-checklist)
     (setq
-      ;; TODO settings
-      org-todo-keywords '((sequence "TODO" "DOING" "VERIFY" "|" "DONE"))
-      org-todo-keyword-faces '(("DOING" . "orange") ("VERIFY" . "blue"))
+     ;; UX
+     org-cycle-emulate-tab nil
 
-      ;; Agenda
-      org-agenda-files (directory-files "~/org" t "^[^.][^#]?.*\.org$")
-      org-agenda-dim-blocked-tasks t
-      org-agenda-todo-ignore-scheduled 'future
-      org-agenda-tags-todo-honor-ignore-options t
+     ;; TODO settings
+     org-todo-keywords '((sequence "TODO" "DOING" "VERIFY" "|" "DONE"))
+     org-todo-keyword-faces '(("DOING" . "orange") ("VERIFY" . "blue"))
 
-      ;; Rendering
-      org-bullets-bullet-list '("○" "◉" "✿" "✸")
-      org-latex-create-formula-image-program 'dvisvgm
-      org-preview-latex-default-process 'dvisvgm
-      org-format-latex-options (append '(:scale 1.5) org-format-latex-options)
+     ;; Agenda
+     org-agenda-files (directory-files "~/org" t "^[^.][^#]?.*\.org$")
+     org-agenda-dim-blocked-tasks t
+     org-agenda-todo-ignore-scheduled 'future
+     org-agenda-tags-todo-honor-ignore-options t
 
-      org-capture-templates '(("t" "Task" entry (file+headline "~/org/todo.org" "Tasks")
-                               "** TODO %? %^G\n  SCHEDULED: %^T\n  %i\n  %a")
-                              ("w" "Task (work)" entry (file+headline "~/org/work.org" "Tasks")
-                               "** TODO %? %^G\n  SCHEDULED: %^T\n  %i\n  %a")
-                              ("f" "Friday Project (work)" entry (file+headline "~/org/work.org" "Friday Projects")
-                               "** TODO %? %^G\n  SCHEDULED: %^T\n  %i\n  %a")
-                              ("j" "Journal" entry (file+datetree "~/org/journal.org")
-                               "* %?\nEntered on %U\n  %i\n  %a"))
+     ;; Rendering
+     org-bullets-bullet-list '("○" "◉" "✿" "✸")
+     org-latex-create-formula-image-program 'dvisvgm
+     org-preview-latex-default-process 'dvisvgm
+     org-format-latex-options (append '(:scale 1.5) org-format-latex-options)
 
-      org-latex-listings 'minted
-      org-latex-packages-alist '(("" "setspace")
-                                 ("" "amsmath")
-                                 ;("" "enumerate")
-                                 ;("" "parskip")
-                                 ;("utf8" "inputenc")
-                                 ;("a4paper,left=1.75in,right=1in,top=1in,bottom=2.2in" "geometry")
-                                 ("" "xfrac" t)
-                                 ("" "bm" t)
-                                 ("" "xcolor")
-                                 ("" "cleveref")
-                                 ("" "mathpazo" t)
-                                 ("scaled" "helvet" t)
-                                 ("scaled=0.85" "beramono" t)
-                                 ("" "minted"))
-      org-latex-pdf-process '("latexmk -lualatex -shell-escape -interaction=nonstopmode -output-directory=%o %f")
-      )
+     org-capture-templates '(("t" "Task" entry (file+headline "~/org/todo.org" "Tasks")
+                              "** TODO %? %^G\n  SCHEDULED: %^T\n  %i\n  %a")
+                             ("w" "Task (work)" entry (file+headline "~/org/work.org" "Tasks")
+                              "** TODO %? %^G\n  SCHEDULED: %^T\n  %i\n  %a")
+                             ("f" "Friday Project (work)" entry (file+headline "~/org/work.org" "Friday Projects")
+                              "** TODO %? %^G\n  SCHEDULED: %^T\n  %i\n  %a")
+                             ("j" "Journal" entry (file+datetree "~/org/journal.org")
+                              "* %?\nEntered on %U\n  %i\n  %a"))
+
+     org-latex-listings 'minted
+
+     org-latex-default-packages-alist (my/set-hyperref-opts org-latex-default-packages-alist
+                                                            "colorlinks=true,citecolor=blue!85!white,linkcolor=green!30!black")
+
+     org-latex-packages-alist '(("" "setspace")
+                                ("" "minted")
+                                ("" "amsmath")
+                                        ;("" "enumerate")
+                                        ;("" "parskip")
+                                        ;("utf8" "inputenc")
+                                        ;("a4paper,left=1.75in,right=1in,top=1in,bottom=2.2in" "geometry")
+                                ("" "xfrac" t)
+                                ("" "bm" t)
+                                ("" "color")
+                                ("" "xcolor")
+                                ("" "cleveref")
+                                ("" "mathpazo" t)
+                                ("scaled" "helvet" t)
+                                ("scaled=0.85" "beramono" t)
+                                )
+     org-latex-pdf-process '("latexmk -lualatex -shell-escape -interaction=nonstopmode -output-directory=%o %f")
+     )
     (org-toggle-pretty-entities))
   (add-to-list 'org-latex-classes
                '("luffyreport"
@@ -829,28 +851,30 @@ dump."
                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
   (fix/org-equation-tags)
 
-  ; Add org-babel settings
+  ;; Add org-babel settings
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((emacs-lisp . t)
      (org . t)
+     (shell . t)
      (latex . t)
+     (python . t)
      (lilypond . t)))
-  ;(add-to-list 'org-babel-default-header-args:lilypond-user
-  ;             '(:prologue . "\\paper{
-  ;   indent=0\\mm
-  ;   line-width=200\\mm
-  ;   oddFooterMarkup=##f
-  ;   oddHeaderMarkup=##f
-  ;   bookTitleMarkup = ##f
-  ;   scoreTitleMarkup = ##f
-  ;   }"))
+                                        ;(add-to-list 'org-babel-default-header-args:lilypond-user
+                                        ;             '(:prologue . "\\paper{
+                                        ;   indent=0\\mm
+                                        ;   line-width=200\\mm
+                                        ;   oddFooterMarkup=##f
+                                        ;   oddHeaderMarkup=##f
+                                        ;   bookTitleMarkup = ##f
+                                        ;   scoreTitleMarkup = ##f
+                                        ;   }"))
 
   ;; My own functions
   (spacemacs/set-leader-keys-for-major-mode 'org-mode
     "iv" 'jamie/latex-vectorify)
   (evil-define-key 'insert org-mode-map (kbd "C-c v") 'jamie/latex-vectorify)
-)
+  )
 
 (defun my/org-ref-config (&rest bibfiles)
   (setq bibtex-completion-bibliography bibfiles
@@ -871,13 +895,15 @@ before packages are loaded."
   (with-eval-after-load 'undo-tree
     (setq undo-tree-auto-save-history nil))
 
+  (direnv-mode)
+
   ;; Emacs window titles
   (setq-default frame-title-format '("%f [%m]"))
   ;; General coding settings
   (remove-hook 'prog-mode-hook #'smartparens-mode)
   (mapc (lambda (x) (add-hook x 'spacemacs/toggle-fill-column-indicator-on))
         '(prog-mode-hook markdown-mode-hook org-mode-hook))
-  ;(spacemacs/toggle-smartparens-globally-off)
+                                        ;(spacemacs/toggle-smartparens-globally-off)
 
   (my/org-roam-config)
   (my/org-config)
@@ -895,4 +921,4 @@ before packages are loaded."
    pytest-project-root-files '("setup.py" ".projectile" ".git" ".hg" ".exercism")
    pytest-global-name "python -m pytest")
   (message "User configuration done")
-)
+  )

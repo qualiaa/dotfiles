@@ -42,6 +42,7 @@ assign [class="Spotify"] 10:music
 # Additional settings
 for_window [class="Firefox" title="JupyterLab"] floating disable
 for_window [class="Steam"] floating enable
+for_window [class="xeyes"] floating enable
 for_window [class="Processing"] floating enable
 for_window [class="UE4Editor"] floating enable
 
