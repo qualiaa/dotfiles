@@ -99,6 +99,7 @@ This function should only modify configuration layer settings."
    dotspacemacs-additional-packages '(
                                       bnf-mode
                                       ripgrep
+                                      direnv
                                       (mathpix :location (recipe :fetcher github :repo "jethrokuan/mathpix.el"))
                                       (bqn-mode :location (recipe :fetcher github :repo "museoa/bqn-mode"))
                                       (pico8-mode :location (recipe :fetcher github :repo "Kaali/pico8-mode"))
@@ -873,6 +874,8 @@ before packages are loaded."
   ;; Do not save undo tree to files
   (with-eval-after-load 'undo-tree
     (setq undo-tree-auto-save-history nil))
+
+  (direnv-mode)
 
   ;; Emacs window titles
   (setq-default frame-title-format '("%f [%m]"))
