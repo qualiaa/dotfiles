@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+. env_parallel.bash
+
+tempdir=$(mktemp -d)
+
+metadata-equal() {
+    local flac_file="$1"
+    local ogg_file="$2"
+    diff <(metaflac --show-all-tags "$flac_file") <(vorbiscomment "$ogg_file") >/dev/null 2>&1
+}
+
+conv () {
+    local flac_file="$1"
+    local ogg_file="${flac_file%.flac}.ogg"
+    [ -f "$ogg_file" ] && { echo "Skipping '$flac_file'" >&2; return ; }
+
+    if ! oggenc -q 6 "$flac_file" 2>"$tmpdir/$flac_file"; then
+        echo "oggenc failed:" >&2
+        cat "$tmpdir/$flac_file" >&2
+        return 1
+    fi
+    if ! metadata-equal "$flac_file" "$ogg_file"; then
+        echo "Metadata for '$flac_file' and '$ogg_file' does not match." >&2
+    fi
+}
+
+export -f metadata-equal conv
+
+find "$1" -iname "*.flac" -print0 | env_parallel --null conv
