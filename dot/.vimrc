@@ -1,7 +1,8 @@
 " Vim default settings
 source $VIMRUNTIME/defaults.vim
 
-set rnu number
+set number
+set rnu
 
 " ===========
 " Plugins
