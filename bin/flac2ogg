@@ -15,11 +15,14 @@ metadata-equal() {
 conv () {
     local flac_file="$1"
     local ogg_file="${flac_file%.flac}.ogg"
+
     [ -f "$ogg_file" ] && { echo "Skipping '$flac_file'" >&2; return ; }
 
-    if ! oggenc -q 6 "$flac_file" 2>"$tmpdir/$flac_file"; then
+    local err_file="$tempdir/$(basename "$flac_file").err"
+
+    if ! oggenc -q 6 "$flac_file" 2>"$err_file"; then
         echo "oggenc failed:" >&2
-        cat "$tmpdir/$flac_file" >&2
+        cat "$err_file" >&2
         return 1
     fi
     if ! metadata-equal "$flac_file" "$ogg_file"; then
