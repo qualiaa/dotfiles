@@ -2,36 +2,56 @@
 
 set -eu
 
-readonly colorscheme_file="$HOME/.Xresources.d/solarized"
+: ${XDG_CACHE_HOME:=$HOME/.cache}
+readonly state_file="$XDG_CACHE_HOME/colorscheme"
 
-update_terminal() {
-    xrdb -merge "$colorscheme_file"
-    pkill -SIGUSR1 urxvt
-    if command -v i3-msg >/dev/null 2>&1; then
-        i3-msg reload >/dev/null 2>&1
+set_wm() {
+    ln -frs "$HOME/.config/sway/solarized-$1" "$HOME/.config/sway/solarized"
+    if command -v swaymsg >/dev/null 2>&1; then
+        swaymsg reload >/dev/null 2>&1
     fi
+}
+
+set_system_theme() {
+    case "$1" in
+        light) local gtk_theme=Adwaita ;;
+        dark) local gtk_theme=Adwaita-dark ;;
+    esac
+    gsettings set org.gnome.desktop.interface gtk-theme $gtk_theme
+    gsettings set org.gnome.desktop.interface color-scheme prefer-$1
+}
+
+set_terminal() {
+    ln -frs "$HOME/.dircolors.ansi-$1" ~/.dircolors
+    ln -frs "$HOME/.config/kitty/solarized-$1.conf" "$HOME/.config/kitty/solarized.conf"
+    kitty @ set-colors -a -c ~/.config/kitty/solarized.conf
 }
 
 set_theme() {
     mode="$1"
-    sed -Ei "/^#include/s/solarized-(light|dark)/solarized-$mode/" "$colorscheme_file"
-    ln -sf "$HOME/.dircolors.ansi-$mode" ~/.dircolors
-    update_terminal
+    set_terminal $mode
+    set_system_theme $mode
+    set_wm $mode
+    echo "$mode" > "$state_file"
 }
 
 current_setting() {
-    sed -nE '/^#include "solarized/p' "$colorscheme_file" | grep -oE "(light|dark)"
+    cat "$state_file"
 }
 
-next_setting() {
-    current_setting | sed 's/light/X/;s/dark/light/;s/X/dark/'
+toggle() {
+    local last="$(! current_setting 2>/dev/null)"
+    case "$last" in
+        light) echo dark ;;
+        dark|*) echo light ;;
+    esac
 }
 
 switch() {
     case "$1" in
         light|dark) set_theme "$1" ;;
-        toggle) switch $(next_setting) ;;
-        *) echo "Invalid current theme"; exit 1
+        toggle) set_theme "$(toggle)" ;;
+        *) echo "Invalid theme: $1" >&2; exit 1
     esac
 }
 
