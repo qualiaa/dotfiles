@@ -12,4 +12,4 @@
 	url = https://github.com/qualiaa/redshift-hooks
 [submodule "dot/.vim/bundle/Vundle.vim"]
 	path = dot/.vim/bundle/Vundle.vim
-	url = git@github.com:VundleVim/Vundle.vim
+	url = https://github.com/VundleVim/Vundle.vim
