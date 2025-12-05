@@ -49,6 +49,7 @@ This function should only modify configuration layer settings."
      racket
      rust
      shell-scripts
+     tidalcycles
      ;; Data schemas
      csv
      json
