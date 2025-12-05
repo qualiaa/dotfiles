@@ -900,7 +900,7 @@ before packages are loaded."
   (setq-default frame-title-format '("%f [%m]"))
   ;; General coding settings
   (remove-hook 'prog-mode-hook #'smartparens-mode)
-  (mapc (lambda (x) (add-hook x 'spacemacs/toggle-fill-column-indicator-on))
+  (mapc (lambda (x) (add-hook x 'spacemacs/toggle-display-fill-column-indicator-on))
         '(prog-mode-hook markdown-mode-hook org-mode-hook))
                                         ;(spacemacs/toggle-smartparens-globally-off)
 
