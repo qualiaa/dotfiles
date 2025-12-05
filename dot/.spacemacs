@@ -50,6 +50,7 @@ This function should only modify configuration layer settings."
      racket
      rust
      shell-scripts
+     tidalcycles
      ;; Data schemas
      csv
      json
@@ -110,7 +111,7 @@ This function should only modify configuration layer settings."
    dotspacemacs-frozen-packages '()
 
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '()
+   dotspacemacs-excluded-packages '(smartparens)
 
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
@@ -509,7 +510,7 @@ It should only modify the values of Spacemacs settings."
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `rg', `ag', `pt', `ack' and `grep'.
    ;; (default '("rg" "ag" "pt" "ack" "grep"))
-   dotspacemacs-search-tools '("rg" "ag" "pt" "ack" "grep")
+   dotspacemacs-search-tools '("rg" "ag" "ack" "grep")
 
    ;; Format specification for setting the frame title.
    ;; %a - the `abbreviated-file-name', or `buffer-name'
@@ -588,7 +589,7 @@ This function defines the environment variables for your Emacs session. By
 default it calls `spacemacs/load-spacemacs-env' which loads the environment
 variables declared in `~/.spacemacs.env' or `~/.spacemacs.d/.spacemacs.env'.
 See the header of this file for more information."
-  (spacemacs/load-spacemacs-env)
+                                        ;(spacemacs/load-spacemacs-env)
   )
 
 (defun dotspacemacs/user-init ()
@@ -901,7 +902,7 @@ before packages are loaded."
   (setq-default frame-title-format '("%f [%m]"))
   ;; General coding settings
   (remove-hook 'prog-mode-hook #'smartparens-mode)
-  (mapc (lambda (x) (add-hook x 'spacemacs/toggle-fill-column-indicator-on))
+  (mapc (lambda (x) (add-hook x 'spacemacs/toggle-display-fill-column-indicator-on))
         '(prog-mode-hook markdown-mode-hook org-mode-hook))
                                         ;(spacemacs/toggle-smartparens-globally-off)
 
