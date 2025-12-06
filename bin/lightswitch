@@ -42,6 +42,9 @@ set_x11() {
     xrdb -merge $HOME/.Xresources
 }
 
+set_background() {
+    ln -frs "$HOME/.wallpapers/$1" "$HOME/.wallpapers/current"
+    /home/jamie/usr/bin/select-wallpapers
 }
 
 set_theme() {
@@ -50,6 +53,7 @@ set_theme() {
     set_terminal $mode
     set_system_theme $mode
     set_wm $mode
+    set_background $mode
     echo "$mode" > "$state_file"
 }
 
