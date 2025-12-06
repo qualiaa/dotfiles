@@ -1,0 +1,1 @@
+../redshift-hooks/hooks/lightswitch.sh
