@@ -43,12 +43,16 @@ set_x11() {
 }
 
 set_background() {
-    ln -frs "$HOME/.wallpapers/$1" "$HOME/.wallpapers/current"
+    ln -Tfrs "$HOME/.wallpapers/$1" "$HOME/.wallpapers/current"
     /home/jamie/usr/bin/select-wallpapers
 }
 
 set_theme() {
     mode="$1"
+    if [ $mode = $(current_setting) ]; then
+        echo "$0: set to current value $mode; doing nothing" >&2
+        return
+    fi
     ! set_x11 $mode
     set_terminal $mode
     set_system_theme $mode
