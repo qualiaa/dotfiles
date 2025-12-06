@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -eux
+set -eu
 
 ! pkill swaybg
 
@@ -12,12 +12,7 @@ extract-display-info() {
     jq --raw-output '.[] |  [.name , (.rect | if .width > .height then "h" else "v" end)] | join(" ")'
 }
 
-#set_wallpaper() {
-#    local name="$1"
-#    local image_path="$2"
-#    nohup swaybg --mode fill --output "$name" --image "$image_path" >/dev/null 2>&1 &
-#}
-
+# Ensure SWAYSOCK is set
 : ${SWAYSOCK:=$(find /run/user/$(id -u) -maxdepth 1 -name "sway-ipc*")}
 export SWAYSOCK
 [ -n "$SWAYSOCK" ]
@@ -27,7 +22,5 @@ mkdir -p "$display_dir"
 
 swaymsg -t get_outputs | extract-display-info | while read -r name ori; do
     find "$wallpaper_dir/$ori" -mindepth 1 | shuf -n1 | xargs -I{} ln -rs {} "$display_dir/$name"
-    #image_path="$(find "$wallpaper_dir/$ori" -mindepth 1 | shuf -n1)"
-    #set_wallpaper "$name" "$image_path"
     swaymsg --quiet output $name background "$display_dir/$name" fill "#996699"
 done
