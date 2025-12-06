@@ -37,11 +37,16 @@ set_terminal() {
     signal-kitty  set-colors -a -c ~/.config/kitty/solarized.conf
 }
 
+set_x11() {
+    ln -frs "$HOME/.Xresources.d/solarized-$1" "$HOME/.Xresources.d/solarized"
+    xrdb -merge $HOME/.Xresources
+}
 
 }
 
 set_theme() {
     mode="$1"
+    ! set_x11 $mode
     set_terminal $mode
     set_system_theme $mode
     set_wm $mode
