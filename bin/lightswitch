@@ -43,7 +43,7 @@ set_x11() {
 }
 
 set_background() {
-    ln -frs "$HOME/.wallpapers/$1" "$HOME/.wallpapers/current"
+    ln -Tfrs "$HOME/.wallpapers/$1" "$HOME/.wallpapers/current"
     /home/jamie/usr/bin/select-wallpapers
 }
 
