@@ -951,7 +951,7 @@ _fzf_compgen_dir() {
 ZSH_THEME="robbyrussell"
 
 zstyle :omz:plugins:ssh-agent identities $(
-grep -ERl -- "^-----BEGIN .+ PRIVATE KEY-----$" ~/.ssh  | xargs -n1 basename | tr '\n' ' ')
+grep -d skip -El -- "^-----BEGIN .+ PRIVATE KEY-----$" ~/.ssh/*  | xargs -n1 basename | tr '\n' ' ')
 
 plugins=(
     # SSH Key management
