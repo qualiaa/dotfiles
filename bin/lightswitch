@@ -15,8 +15,10 @@ signal-kitty() {
 
 set_wm() {
     ln -frs "$HOME/.config/sway/solarized-$1" "$HOME/.config/sway/solarized"
-    if command -v swaymsg >/dev/null 2>&1; then
-        swaymsg reload >/dev/null 2>&1
+    : ${SWAYSOCK:=$(find /run/user/$(id -u) -maxdepth 1 -name "sway-ipc*")}
+    export SWAYSOCK
+    if [ -n "$SWAYSOCK" ] && command -v swaymsg >/dev/null 2>&1; then
+        swaymsg --quiet reload >/dev/null 2>&1
     fi
 }
 
