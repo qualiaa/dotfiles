@@ -5,6 +5,14 @@ set -eu
 : ${XDG_CACHE_HOME:=$HOME/.cache}
 readonly state_file="$XDG_CACHE_HOME/colorscheme"
 
+signal-kitty() {
+    # This needs the following line in kitty.conf:
+    # listen_on unix:/tmp/kitty.sock
+    find /tmp -maxdepth 1 -name "kitty.sock*" | while read -r sock; do
+        kitty @ --to "unix:$sock" "$@"
+    done
+}
+
 set_wm() {
     ln -frs "$HOME/.config/sway/solarized-$1" "$HOME/.config/sway/solarized"
     if command -v swaymsg >/dev/null 2>&1; then
@@ -24,12 +32,9 @@ set_system_theme() {
 set_terminal() {
     ln -frs "$HOME/.dircolors.ansi-$1" ~/.dircolors
     ln -frs "$HOME/.config/kitty/solarized-$1.conf" "$HOME/.config/kitty/solarized.conf"
-    # This needs the following line in kitty.conf:
-    # listen_on unix:/tmp/kitty.sock
+    signal-kitty  set-colors -a -c ~/.config/kitty/solarized.conf
+}
 
-    find /tmp -maxdepth 1 -name "kitty.sock*" | while read -r sock; do
-        kitty @ --to "unix:$sock" set-colors -a -c ~/.config/kitty/solarized.conf
-    done
 
 }
 
