@@ -1,13 +1,3 @@
-dot/.config/*
-!dot/.config/fontconfig
-!dot/.config/dunst
-!dot/.config/i3
-!dot/.config/i3status
-!dot/.config/redshift
-!dot/.config/emacs
-!dot/.config/sublime-text-3
-!dot/.config/mimeapps.list
-
 */.vim/bundle/*
 !dot/.vim/bundle/Vundle.vim
 */.ghc/ghci_history

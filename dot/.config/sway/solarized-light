@@ -1,0 +1,10 @@
+set $S_base03        #fdf6e3
+set $S_base02        #eee8d5
+set $S_base01        #93a1a1
+set $S_base00        #839496
+set $S_base0         #657b83
+set $S_base1         #586e75
+set $S_base2         #073642
+set $S_base3         #002b36
+
+include solarized-common

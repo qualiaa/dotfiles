@@ -1,0 +1,49 @@
+set $S_yellow        #b58900
+set $S_orange        #cb4b16
+set $S_red           #dc322f
+set $S_magenta       #d33682
+set $S_violet        #6c71c4
+set $S_blue          #268bd2
+set $S_cyan          #2aa198
+set $S_green         #859900
+
+set $borderColor   $S_base03
+set $background    $S_base03
+set $foreground    $S_base0
+set $fadeColor     $S_base03
+set $cursorColor   $S_base2
+set $pointerColor  $S_base01
+set $pointerColor2 $S_base1
+
+# black dark/light
+set $c0                $S_base02
+set $c8                $S_base03
+
+# red dark/light
+set $c1                $S_red
+set $c9                $S_orange
+
+# green dark/light
+set $c2                $S_green
+set $c10               $S_base01
+
+# yellow dark/light
+set $c3                $S_yellow
+set $c11               $S_base00
+
+# blue dark/light
+set $c4                $S_blue
+set $c12               $S_base0
+
+# magenta dark/light
+set $c5                $S_magenta
+set $c13               $S_violet
+
+# cyan dark/light
+set $c6                $S_cyan
+set $c14               $S_base1
+
+# white dark/light
+set $c7                $S_base2
+set $c15               $S_base3
+
