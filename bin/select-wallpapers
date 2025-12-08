@@ -9,7 +9,7 @@ output_dir="$HOME/.wallpapers"
 display_dir="$output_dir/displays"
 
 extract-display-info() {
-    jq --raw-output '.[] |  [.name , (.rect | if .width > .height then "h" else "v" end)] | join(" ")'
+    jq --raw-output '.[] |  [.name , .rect.x, .rect.y, .transform, (.rect | if .width > .height then "h" else "v" end)] | join(" ")'
 }
 
 # Ensure SWAYSOCK is set
@@ -20,7 +20,7 @@ export SWAYSOCK
 mkdir -p "$display_dir"
 ! rm "$display_dir"/*
 
-swaymsg -t get_outputs | extract-display-info | while read -r name ori; do
+swaymsg -t get_outputs | extract-display-info | while read -r name x y tfm ori; do
     find "$wallpaper_dir/$ori" -mindepth 1 | shuf -n1 | xargs -I{} ln -rs {} "$display_dir/$name"
-    swaymsg --quiet output $name background "$display_dir/$name" fill "#996699"
+    swaymsg --quiet output $name pos $x $y background "$display_dir/$name" fill "#996699" transform "$tfm"
 done
