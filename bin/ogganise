@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+get_path () {
+    vorbiscomment "$1" | awk -F= '
+        {
+            i = tolower($1);
+            gsub("[[:space:]]", "", i)
+            m[i] = $2
+        }
+        function get(i) { if (! i in m) { print "Bad index: " i >"/dev/stderr"; exit 1 } return m[i] }
+        END {
+            if ("albumartist" in m) {
+                artist = m["albumartist"]
+            } else if ("artist" in m) {
+                artist = m["artist"]
+            } else {
+                print m["artist"] > "/dev/stderr"
+                print m["albumartist"] > "/dev/stderr"
+                print "Bad index (artist/albumartist)" > "/dev/stderr"
+                exit 1
+            }
+
+            date = get("date")
+            date = substr( date , match(date, "[[:digit:]]{4}"))
+            if (RLENGTH == -1) { exit 1 }
+
+            printf ("%s/[%d] %s/%.02d - %s.ogg\n",
+                artist,
+                date,
+                get("album"),
+                get("tracknumber"),
+                get("title"))
+        }'
+}
+
+function place() {
+    local ogg_file="$1"
+
+    set +e
+    local path="$(get_path "$ogg_file")"
+    if [ $? -ne 0 ]; then
+        echo "Could not get path for $ogg_file" >&2
+        failure=
+        return
+    fi
+    set -e
+
+    if [ "${DRY_RUN+true}" ]; then
+        echo "$path"
+    else
+        mkdir -p "$(dirname "$path")"
+        mv --no-clobber "$ogg_file" "$path"
+    fi
+}
+
+
+for ogg_file in "$1"/**/*.[Oo][gG][gG]; do
+    place "$ogg_file"
+done
+
+if [ ${failure+true} ]; then
+    exit 1
+fi
