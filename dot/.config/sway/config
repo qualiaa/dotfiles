@@ -16,7 +16,6 @@ set $audio_player strawberry
 
 floating_modifier $mod
 
-include ~/.sway/monitors
 # Screen Settings
 #< DO NOT EDIT THIS SECTION
 workspace 8:www output DP1
