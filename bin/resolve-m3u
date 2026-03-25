@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+playlist=${1:?Must provide playlist as first argument}
+playlist_filename=$(basename "$playlist")
+folder=${playlist%.m3u}
+
+new_playlist="$folder/$playlist_filename"
+
+mkdir -p "$folder"
+echo "#EXTM3U" > "$new_playlist"
+grep -v '^#' "$1" | while read -r path; do
+    cp "$path" "$folder"
+    basename "$path" >> "$new_playlist"
+done 

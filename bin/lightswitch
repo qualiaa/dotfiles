@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -eu
+set -eux
 
 : ${XDG_CACHE_HOME:=$HOME/.cache}
 readonly state_file="$XDG_CACHE_HOME/colorscheme"
@@ -8,17 +8,18 @@ readonly state_file="$XDG_CACHE_HOME/colorscheme"
 signal-kitty() {
     # This needs the following line in kitty.conf:
     # listen_on unix:/tmp/kitty.sock
+    set +e
     find /tmp -maxdepth 1 -name "kitty.sock*" | while read -r sock; do
-        kitty @ --to "unix:$sock" "$@"
+        kitty @ --to "unix:$sock" "$@" 2>/dev/null
     done
+    set -e
 }
 
 set_wm() {
     ln -frs "$HOME/.config/sway/solarized-$1" "$HOME/.config/sway/solarized"
     : ${SWAYSOCK:=$(find /run/user/$(id -u) -maxdepth 1 -name "sway-ipc*")}
-    export SWAYSOCK
-    if [ -n "$SWAYSOCK" ] && command -v swaymsg >/dev/null 2>&1; then
-        swaymsg --quiet reload >/dev/null 2>&1
+    if [ -n "$SWAYSOCK" ] && [ -e "$SWAYSOCK" ] && command -v swaymsg >/dev/null 2>&1; then
+        SWAYSOCK="$SWAYSOCK" swaymsg reload
     fi
 }
 
@@ -67,7 +68,7 @@ current_setting() {
 
 toggle() {
     local last="$(! current_setting 2>/dev/null)"
-    case "$last" in
+    case $last in
         light) echo dark ;;
         dark|*) echo light ;;
     esac

@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -eu
+sed -Ei '/"maximized"/s/false/true/' .config/Signal/ephemeral.json
+nohup signal-desktop >/dev/null 2>&1 &
